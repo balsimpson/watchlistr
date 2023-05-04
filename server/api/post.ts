@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 // import { getAuth } from "firebase/auth";
-import { getDocsFromFirestore, getDocFromFirestore, getDocFromFirestoreWithSlug, getDocsWithStatus } from "~~/composables/useFirebase";
+import { getDocsFromFirestore, getDocFromFirestoreWithSlug } from "~~/composables/useFirebase";
 
 export default defineEventHandler(async (event) => {
   // const config = useRuntimeConfig()
@@ -22,8 +22,8 @@ export default defineEventHandler(async (event) => {
     // increment page view
 
     // @ts-ignore
-    return await getDocFromFirestoreWithSlug("posts", query.slug)
+    return await getDocFromFirestoreWithSlug("items", query.slug)
   }
 
-  return await getDocsFromFirestore("posts")
+  return await getDocsFromFirestore("items")
 })

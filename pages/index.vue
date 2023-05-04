@@ -1,5 +1,14 @@
 <template>
-    <div>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad necessitatibus earum perferendis. Optio adipisci facere tempore aliquam provident ducimus possimus hic odit excepturi, laboriosam nam sequi illum non et aut.
-    </div>
+	<div class="max-w-4xl mx-auto p-4 mt-12">
+		
+
+		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+			<AppCardImg v-for="item in items" :key="item" :item="item"/>
+
+		</div>
+	</div>
 </template>
+
+<script lang="ts" setup>
+const { data: items } = useFetch("/api/post")
+</script>

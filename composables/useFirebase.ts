@@ -165,8 +165,35 @@ export const addDocToFirestore = async (collectionName: string, doc: any) => {
 	}
 };
 
+/**
+ * Add a document to a collection
+ * @param {string} collectionName - collection name
+ * @param {object} doc - document to add
+ * @example addDocWithId('products', { title: "test", body: "test" }, new-id)
+ */
+export const addDocWithId = async (collectionName: string, data: any, docId: string) => {
+	try {
+		const db = getFirestore();
+		const docRef = await setDoc(doc(db, collectionName, docId), data);
+		console.log("Document written with ID: ", docRef);
+		return docRef;
+	} catch (error) {
+		console.log("firebase-error", error);
+		return error;
+	}
+};
+
 export const signOutUser = async () => {
 	const auth = getAuth();
 	const result = await auth.signOut();
 	return result;
 };
+
+export const checkIfDocExists = async (docId: string) => {
+	const db = getFirestore();
+	let docRef = doc(db, "items", docId)
+	// @ts-ignore
+	let res = await getDoc(docRef)
+	// console.log("res", res)
+	return res.data()
+}

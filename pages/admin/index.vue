@@ -15,7 +15,7 @@
 
 				<div class="sm:inline-flex gap-x-2 shrink-0">
 					<NuxtLink
-						to="/admin/compose"
+						to="/admin/add"
 						class="w-full px-12 py-3 text-center text-white bg-cyan-600 rounded-lg sm:w-auto shrink-0 flex items-center justify-center"
 						><svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +26,7 @@
 						>
 							<path d="M12 4.5v15m7.5-7.5h-15" />
 						</svg>
-						<span class="pl-2">Add New Post</span></NuxtLink
+						<span class="pl-2">Add New Item</span></NuxtLink
 					>
 				</div>
 			</header>
