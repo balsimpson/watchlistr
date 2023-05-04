@@ -21,8 +21,8 @@
               <input @keypress.enter="searchMovie(movie1name, 1)" v-model="movie1name" type="text"
                 class="flex items-center w-full p-3 pr-12 mb-5 text-base font-normal border-2 rounded placeholder-stone-600 text-stone-300 border-stone-600 focus:outline-none focus:border-amber-500 bg-stone-800 focus-within:border-amber-500"
                 placeholder="enter movie or show name">
-              <IconSearch @clock.prevent="searchMovie(movie1name, 1)"
-                class="absolute w-10 h-10 p-2 -translate-y-1/2 cursor-pointer right-1 top-1/2 text-stone-600 hover:text-amber-500" />
+              <!-- <IconSearch @clock.prevent="searchMovie(movie1name, 1)"
+                class="absolute w-10 h-10 p-2 -translate-y-1/2 cursor-pointer right-1 top-1/2 text-stone-600 hover:text-amber-500" /> -->
             </div>
           </div>
 
@@ -50,8 +50,8 @@
             <input @keypress.enter="searchMovie(movie2name, 2)" v-model="movie2name" type="text"
               class="flex items-center w-full p-3 pr-12 mb-5 text-base font-normal border-2 rounded placeholder-stone-600 text-stone-300 border-stone-600 focus:outline-none focus:border-amber-500 bg-stone-800 focus-within:border-amber-500"
               placeholder="enter movie or show name">
-            <IconSearch @clock.prevent="searchMovie(movie1name, 1)"
-              class="absolute w-10 h-10 p-2 -translate-y-1/2 cursor-pointer right-1 top-1/2 text-stone-600 hover:text-amber-500" />
+            <!-- <IconSearch @clock.prevent="searchMovie(movie1name, 1)"
+              class="absolute w-10 h-10 p-2 -translate-y-1/2 cursor-pointer right-1 top-1/2 text-stone-600 hover:text-amber-500" /> -->
           </div>
 
           <div class="text-amber-500">{{ search2Message }}</div>
@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { IconSearch } from "@iconify-prerendered/vue-bx";
+// import { IconSearch } from "@iconify-prerendered/vue-bx";
 
 definePageMeta({
   layout: false
