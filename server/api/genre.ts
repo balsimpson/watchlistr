@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-// import { getAuth } from "firebase/auth";
-import { getDocsFromFirestore, getDocFromFirestoreWithSlug } from "~~/composables/useFirebase";
+import { getDocsMatchingGenre } from "~~/composables/useFirebase";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -11,13 +10,13 @@ export default defineEventHandler(async (event) => {
     projectId: config.private.FIREBASE_PROJECT_ID,
   };
 
+  // console.log(query)
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  // console.log(query.slug)
-  if (query.slug) {
+  if (query.genre) {
     // @ts-ignore
-    return await getDocFromFirestoreWithSlug("media", query.slug)
+    let res = await getDocsMatchingGenre("media", query.genre)
+    // console.log(res)
+    return res
   }
-
-  return await getDocsFromFirestore("media")
 })

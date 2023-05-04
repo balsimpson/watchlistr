@@ -1,16 +1,14 @@
 <template>
 	<!-- <body class="bg-gray-50 dark:bg-slate-900"> -->
 	<div class="p-6 lg:h-screen h-[calc(100vh-54px)] flex flex-col">
-		<div>
-			<header class="flex sm:items-end w-full flex-col sm:flex-row">
+		<div v-if="items">
+			<header
+				class="flex sm:items-end w-full flex-col sm:flex-row justify-between"
+			>
 				<div class="sm:pr-6 pb-6 sm:pb-0">
 					<h1 class="block text-2xl font-bold text-gray-800 sm:text-3xl">
-						Blog Posts
+						Media {{ items.length }}
 					</h1>
-					<p class="mt-2 text-lg text-gray-800">
-						Add new posts or edit existing ones. These will show on the blog
-						page of the website.
-					</p>
 				</div>
 
 				<div class="sm:inline-flex gap-x-2 shrink-0">
@@ -26,7 +24,7 @@
 						>
 							<path d="M12 4.5v15m7.5-7.5h-15" />
 						</svg>
-						<span class="pl-2">Add New Item</span></NuxtLink
+						<span class="pl-2">Add New Media</span></NuxtLink
 					>
 				</div>
 			</header>
@@ -39,7 +37,7 @@
 						@keyup="searchPosts"
 						type="text"
 						class="w-full p-3 text-sm border border-gray-200 rounded-md focus:border-blue-500 focus:ring-blue-500"
-						placeholder="Search posts"
+						placeholder="Search media"
 						v-model="searchTerm"
 					/>
 					<div
@@ -60,23 +58,19 @@
 					</div>
 				</div>
 			</div>
-			<div class="inline-flex gap-x-2">
-				<NuxtLink
-					to="/admin/events/add"
-					class="w-full px-3 py-1 text-center text-cyan-600 border-2 border-cyan-500 rounded-lg sm:w-auto shrink-0 flex items-center text-sm"
-				>
-					<span class="pl-2">Show Drafts</span></NuxtLink
-				>
-			</div>
 			<!-- End Header -->
 		</div>
 
-		<div class="flex-grow overflow-y-scroll space-y-4">
-			<!-- <pre>{{ posts }}</pre> -->
-			<AppCardPost v-for="post in posts" :key="post" :post="post"/>
+		<div
+			v-if="items"
+			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 overflow-y-scroll"
+		>
+			<div v-for="item in items">
+				<!-- <NuxtLink v-if="item" :to="'/' + item.media_type + '/' + item.slug"> -->
+				<AppCardImg :item="item" />
+				<!-- </NuxtLink> -->
+			</div>
 		</div>
-
-		<div>hello</div>
 	</div>
 </template>
 
@@ -89,30 +83,31 @@
 	const firebaseItems = useFirebaseItems();
 
 	const {
-		data: posts,
+		data: items,
 		pending,
 		error,
-	} = await useAsyncData<any[]>("posts", () => $fetch("/api/post"));
+	} = await useAsyncData<any[]>("items", () => $fetch("/api/post"));
 
+	
 	const searchTerm = ref("");
 	const searchItems = ref([]);
 
 	watchEffect(() => {
 		// @ts-ignore
-		firebaseItems.value = posts.value;
+		firebaseItems.value = items.value;
 
 		// @ts-ignore
-		searchItems.value = posts.value;
+		searchItems.value = items.value;
 	});
 
 	const searchPosts = () => {
-		const searchByTitle = fuzzy(posts.value, "title");
+		const searchByTitle = fuzzy(items.value, "title");
 		const found = searchByTitle(searchTerm.value);
 		if (searchTerm.value.length > 0) {
 			searchItems.value = found;
 		} else {
 			// @ts-ignore
-			searchItems.value = posts.value;
+			searchItems.value = items.value;
 		}
 		// console.log(found)
 	};

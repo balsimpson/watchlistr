@@ -2,41 +2,11 @@
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## Setup
+## Setup TipTap
 
-Make sure to install the dependencies:
+### Install dependencies including tailwind typography plugin
 
-```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install
+```
+npm install @tiptap/vue-3 @tiptap/starter-kit @tiptap/extension-youtube @tiptap/extension-text-align @tiptap/extension-placeholder @tiptap/extension-bubble-menu @tiptap/extension-character-count @tiptap/extension-code @tiptap/extension-heading @tiptap/extension-highlight @tiptap/extension-image @tiptap/extension-link @tailwindcss/typography
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

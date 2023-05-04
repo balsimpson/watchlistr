@@ -151,21 +151,21 @@
 	};
 
 	const addToList = async () => {
+		const slug = createSlug(selectedItem.value.title, selectedItem.value.release_date.split("-")[0])
 		const data = {
 			created_at: Date.now(),
-			item: selectedItem.value,
 			comment: itemComment.value,
 			tags: itemTags.value,
+			slug: slug,
+			...selectedItem.value,
 		};
-
-		console.log(selectedItem.value.imdb_id);
 
 		let docExists = await checkIfDocExists(selectedItem.value.imdb_id);
 
-		// console.log("exists", res)
+		// // console.log("exists", res)
 
 		if (!docExists) {
-			let result = await addDocWithId("items", data, selectedItem.value.imdb_id);
+			let result = await addDocWithId("media", data, selectedItem.value.imdb_id);
 			console.log("result", result)
 		} else {
 			console.log("no");

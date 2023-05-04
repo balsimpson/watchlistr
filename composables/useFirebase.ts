@@ -87,6 +87,66 @@ export const getDocFromFirestoreWithSlug = async (
 };
 
 /**
+ * Get a single document from a collection where slug
+ * @param {String} collectionName - collection name
+ * @param {String} tag - tag name
+ * @example getDocsMatchingTag('posts', 'nuxt-3')
+ */
+export const getDocsMatchingTag = async (
+	collectionName: string,
+	tag: string
+) => {
+	try {
+		const db = getFirestore();
+		const q = query(
+			collection(db, collectionName),
+			where("tags", "array-contains", tag)
+		);
+		const querySnapshot = await getDocs(q);
+		let items: DocumentData[] = [];
+		querySnapshot.forEach((doc) => {
+			let item = doc.data();
+			item.id = doc.id;
+			items.push(item);
+		});
+		return items;
+	} catch (error) {
+		console.log("getDocsMatchingTag-error", error);
+		return error;
+	}
+};
+
+/**
+ * Get a single document from a collection where genre matches
+ * @param {String} collectionName - collection name
+ * @param {String} genre - genre name
+ * @example getDocsMatchingGenre('media', 'mystery')
+ */
+export const getDocsMatchingGenre = async (
+	collectionName: string,
+	genre: string
+) => {
+	try {
+		const db = getFirestore();
+		const q = query(
+			collection(db, collectionName),
+			where("genres", "array-contains", genre)
+		);
+		const querySnapshot = await getDocs(q);
+		let items: DocumentData[] = [];
+		querySnapshot.forEach((doc) => {
+			let item = doc.data();
+			item.id = doc.id;
+			items.push(item);
+		});
+		return items;
+	} catch (error) {
+		console.log("getDocsMatchingGenre-error", error);
+		return error;
+	}
+};
+
+/**
  * Get documents from a collection
  * @param {String} collectionName - name of the collection
  * @returns {Array} array of items
@@ -171,7 +231,11 @@ export const addDocToFirestore = async (collectionName: string, doc: any) => {
  * @param {object} doc - document to add
  * @example addDocWithId('products', { title: "test", body: "test" }, new-id)
  */
-export const addDocWithId = async (collectionName: string, data: any, docId: string) => {
+export const addDocWithId = async (
+	collectionName: string,
+	data: any,
+	docId: string
+) => {
 	try {
 		const db = getFirestore();
 		const docRef = await setDoc(doc(db, collectionName, docId), data);
@@ -191,9 +255,9 @@ export const signOutUser = async () => {
 
 export const checkIfDocExists = async (docId: string) => {
 	const db = getFirestore();
-	let docRef = doc(db, "items", docId)
+	let docRef = doc(db, "items", docId);
 	// @ts-ignore
-	let res = await getDoc(docRef)
+	let res = await getDoc(docRef);
 	// console.log("res", res)
-	return res.data()
-}
+	return res.data();
+};

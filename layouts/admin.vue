@@ -104,9 +104,29 @@
 
 			<nav class="p-6 w-full flex flex-col flex-wrap flex-grow">
 				<ul class="space-y-1.5">
+
 					<li>
 						<NuxtLink
 							to="/admin"
+							class="flex items-center gap-x-3.5 py-2 px-2.5 text-lg text-gray-400 rounded-md hover:bg-gray-200 hover:text-gray-500"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="currentColor"
+								class="w-6 h-6"
+							>
+								<path
+									d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
+								/>
+							</svg>
+
+							Media
+						</NuxtLink>
+					</li>
+					<li>
+						<NuxtLink
+							to="/admin/posts"
 							class="flex items-center gap-x-3.5 py-2 px-2.5 text-lg text-gray-400 rounded-md hover:bg-gray-200 hover:text-gray-500"
 						>
 							<svg
@@ -127,85 +147,8 @@
 						</NuxtLink>
 					</li>
 
-					<li>
-						<NuxtLink
-							to="/admin/events"
-							class="flex items-center gap-x-3.5 py-2 px-2.5 text-lg text-gray-400 rounded-md hover:bg-gray-200 hover:text-gray-500"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z"
-								/>
-							</svg>
-
-							Events
-						</NuxtLink>
-					</li>
-
-					<li>
-						<NuxtLink
-							to="/admin/jobs"
-							class="flex items-center gap-x-3.5 py-2 px-2.5 text-lg text-gray-400 rounded-md hover:bg-gray-200 hover:text-gray-500"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"
-								/>
-							</svg>
-
-							Jobs
-						</NuxtLink>
-					</li>
-					<li>
-						<NuxtLink
-							to="/admin/media"
-							class="flex items-center gap-x-3.5 py-2 px-2.5 text-lg text-gray-400 rounded-md hover:bg-gray-200 hover:text-gray-500"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
-								/>
-							</svg>
-
-							Media
-						</NuxtLink>
-					</li>
-					<li>
-						<NuxtLink
-							to="/admin/help"
-							class="flex items-center gap-x-3.5 py-2 px-2.5 text-lg text-gray-400 rounded-md hover:bg-gray-200 hover:text-gray-500"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								class="w-6 h-6"
-							>
-								<path
-									d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-								/>
-							</svg>
-
-							Help
-						</NuxtLink>
-					</li>
+					
+					
 				</ul>
 			</nav>
 			<div v-if="firebaseUser" class="px-6 text-gray-500">
