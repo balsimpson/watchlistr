@@ -1,13 +1,13 @@
 <template>
 	<div
 		v-if="post"
-		class="flex flex-wrap items-center justify-center max-w-5xl mx-auto sm:mt-12 mt-3 p-3 sm:px-6"
+		class="flex flex-wrap items-center justify-center max-w-4xl mx-auto sm:mt-12 mt-3 p-3 sm:px-6"
 	>
 		<!-- <pre class="text-stone-400">{{ post }}</pre> -->
-		<div class="grid gap-6 sm:grid-cols-6 text-stone-400">
+		<div class="grid gap-6 sm:grid-cols-6 text-stone-400 w-full">
 			<div class="relative sm:col-span-2">
 				<img
-					class="object-cover object-center w-auto  h-64 mx-auto rounded-lg"
+					class="object-cover object-center w-full mx-auto rounded-lg"
 					:alt="post.title"
 					:src="getImageURL(post.poster_path)"
 				/>
