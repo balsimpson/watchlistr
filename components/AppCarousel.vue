@@ -1,8 +1,11 @@
 <template>
 	<div
+	v-if="items"
 		class="flex max-w-5xl mx-auto mt-2 space-x-2 overflow-scroll snap-mandatory snap-x scroll-container"
 	>
-		<div class="max-w-96 shrink-0 snap-start">
+	<!-- <pre class="text-stone-400">{{ items }}</pre> -->
+		<AppCardImg v-for="item in items" :key="item"></AppCardImg>
+		<!-- <div class="max-w-96 shrink-0 snap-start">
 			<a
 				href="/list/an-enjoyable-agatha-christie-murder-mystery_2I8uy0nB0FmQhZQSfwOH"
 				class=""
@@ -365,6 +368,10 @@
 						class="object-cover w-64 rounded-lg h-96"
 					/></div
 			></a>
-		</div>
+		</div> -->
 	</div>
 </template>
+
+<script setup>
+defineProps(["items"])
+</script>

@@ -2,13 +2,14 @@
 	<!-- <div @click="navigateTo('/' + item.media_type + '/' + item.slug)" class="cursor-pointer"> -->
 
 	<div
+		v-if="item"
 		class="relative transition border border-transparent rounded-lg shadow hover:border-amber-500 h-full overflow-hidden"
 	>
-		<!-- <div class="absolute top-3 right-3 bg-black/80 rounded px-2 text-xs font-semibold text-stone-200 tracking-wide py-1">{{item.spoken_languages[0].english_name}}</div> -->
-
 		<div class="absolute inset-0 rounded-lg bg-gradient-to-t from-black">
 			<div class="absolute inset-x-0 bottom-5">
-				<NuxtLink :to="'/' + item.media_type + '/' + item.slug"
+				<!-- <pre>{{ item }}</pre> -->
+				<NuxtLink
+					:to="'/' + item.media_type + '/' + item.slug"
 					class="px-2 pb-4 leading-5 text-center text-gray-200 capitalize text-xl flex justify-center hover:text-amber-500"
 				>
 					{{ item.title }}
@@ -31,8 +32,6 @@
 			class="object-cover w-full rounded-lg h-76"
 		/>
 	</div>
-	<!-- </NuxtLink> -->
-	<!-- </div> -->
 </template>
 
 <script lang="ts" setup>

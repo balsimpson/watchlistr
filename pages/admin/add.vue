@@ -1,12 +1,7 @@
 <template>
 	<div class="max-w-2xl p-4 h-full flex flex-col mx-auto">
 		<div class="grow overflow-y-scroll">
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est quia iure
-				dolores eius aperiam. Reiciendis, aut consequatur maiores alias dolorem
-				at eaque. Tempora doloremque iure quam. Explicabo odit aspernatur
-				mollitia.
-			</p>
+			<p>Search</p>
 
 			<SearchWithDropdown
 				@keyup="publishStatus = false"
@@ -14,7 +9,7 @@
 				@search="doSearch($event)"
 				@selected="clickHandler($event)"
 				@clear="searchResults = []"
-				placeholder="try 'The Office'"
+				placeholder="try 'The Matrix'"
 				:searchResults="searchResults"
 				:isSearching="isSearching"
 			>
@@ -60,22 +55,38 @@
 							v-model="itemComment"
 							placeholder="Your comments"
 						></textarea>
-
-						<div
-							class="mt-10 flex justify-center items-center gap-x-6 sm:justify-start"
-						>
-							<button
-								@click.prevent="addToList"
-								class="rounded-md bg-[#009cd9] px-12 py-2.5 text-sm font-semibold transition text-gray-100 shadow-sm hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-							>
-								Add to list
-							</button>
-						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div>hello</div>
+		<div>
+			<div
+				v-if="errorMessage"
+				class="flex bg-black/[.05] justify-center w-full px-3 py-2 border border-red-500/50 rounded-full shadow-md max-w-md mx-auto mb-2"
+			>
+				<div class="text-center text-red-500 text-sm">
+					{{ errorMessage }}
+				</div>
+			</div>
+			<div v-if="successMessage" class="flex bg-black/[.05] justify-center w-full px-3 py-2 border border-green-500/50 rounded-full shadow-md max-w-md mx-auto mb-2">
+      <div class="text-center text-green-500 text-sm">
+        {{ successMessage }}
+      </div>
+    </div>
+			<div
+				v-if="selectedItem"
+				class="flex justify-between items-center gap-x-6"
+			>
+				<NuxtLink to="/admin">Cancel</NuxtLink>
+				<button
+					@click.prevent="addToList"
+					class="rounded-md bg-[#009cd9] px-12 py-2.5 text-sm font-semibold transition text-gray-100 shadow-sm hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white capitalize"
+					:class="[isSearching ? 'pointer-events-none opacity-50' : '']"
+				>
+					{{ addBtnTxt }}
+				</button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -86,7 +97,8 @@
 	});
 
 	const searchTerm = ref("");
-
+	const errorMessage = ref("");
+	const successMessage = ref("");
 	const newList = ref([]);
 	const searchResults = ref([]);
 	const queryString = ref("");
@@ -102,6 +114,8 @@
 	const itemTags = ref([]);
 	const tagSuggestions = ["mindfuck"];
 	const itemComment = ref("");
+
+	const addBtnTxt = ref("add to list");
 
 	const addTags = (tags: never[]) => {
 		itemTags.value = tags || [];
@@ -151,7 +165,11 @@
 	};
 
 	const addToList = async () => {
-		const slug = createSlug(selectedItem.value.title, selectedItem.value.release_date.split("-")[0])
+		addBtnTxt.value = "adding...";
+		const slug = createSlug(
+			selectedItem.value.title,
+			selectedItem.value.release_date.split("-")[0]
+		);
 		const data = {
 			created_at: Date.now(),
 			comment: itemComment.value,
@@ -162,13 +180,29 @@
 
 		let docExists = await checkIfDocExists(selectedItem.value.imdb_id);
 
-		// // console.log("exists", res)
+		console.log("exists", docExists);
 
 		if (!docExists) {
-			let result = await addDocWithId("media", data, selectedItem.value.imdb_id);
-			console.log("result", result)
+			let result = await addDocWithId(
+				"media",
+				data,
+				selectedItem.value.imdb_id
+			);
+			// console.log("result", result);
+			successMessage.value = "Successfully added.";
+
+			setTimeout(() => {
+				successMessage.value = "";
+			}, 5000);
 		} else {
 			console.log("no");
+			errorMessage.value = "Duplicate! Item already added.";
+
+			setTimeout(() => {
+				errorMessage.value = "";
+			}, 5000);
 		}
+
+		addBtnTxt.value = "add to list";
 	};
 </script>

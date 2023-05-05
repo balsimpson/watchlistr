@@ -255,7 +255,7 @@ export const signOutUser = async () => {
 
 export const checkIfDocExists = async (docId: string) => {
 	const db = getFirestore();
-	let docRef = doc(db, "items", docId);
+	let docRef = doc(db, "media", docId);
 	// @ts-ignore
 	let res = await getDoc(docRef);
 	// console.log("res", res)

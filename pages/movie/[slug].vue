@@ -4,21 +4,21 @@
 		class="flex flex-wrap items-center justify-center max-w-5xl mx-auto sm:mt-12 mt-3 p-3 sm:px-6"
 	>
 		<!-- <pre class="text-stone-400">{{ post }}</pre> -->
-		<div class="grid gap-6 sm:grid-cols-2 text-stone-400">
-			<div class="relative">
+		<div class="grid gap-6 sm:grid-cols-6 text-stone-400">
+			<div class="relative sm:col-span-2">
 				<img
-					class="object-cover object-center w-auto sm:h-full h-64 mx-auto rounded-lg"
+					class="object-cover object-center w-auto  h-64 mx-auto rounded-lg"
 					:alt="post.title"
 					:src="getImageURL(post.poster_path)"
 				/>
 			</div>
-			<div>
+			<div class="sm:col-span-4">
 				<h1
 					class="text-5xl font-bold leading-none tracking-tighter text-center sm:text-left md:text-6xl"
 				>
 					<span class="text-stone-300"> {{ post.title }} </span>
 				</h1>
-				<div class="text-sm space-x-6 text-center sm:text-left">
+				<div class="text-base pt-3 space-x-6 text-center sm:text-left">
 					<span class="italic">{{ post.release_date.split("-")[0] }}</span>
 					<span>{{ post.runtime }} min</span>
 					<span class="text-cyan-400">Movie</span>
@@ -82,15 +82,15 @@
 			},
 			{
 				property: "og:description",
-				content: () => post?.value?.description,
+				content: () => post?.value?.overview,
 			},
 			{
 				property: "og:image",
-				content: () => post?.value?.image,
+				content: () => getImageURL(post.value.poster_path),
 			},
 			{
 				property: "og:url",
-				content: "https://manasasichrem.org/",
+				content: "https://watchlistr.in/" + post.value.media_type + "/" + post.value.slug,
 			},
 			{
 				name: "twitter:card",
@@ -102,11 +102,11 @@
 			},
 			{
 				name: "twitter:description",
-				content: () => post.value?.description,
+				content: () => post.value?.overview,
 			},
 			{
 				name: "twitter:image",
-				content: () => post.value?.image,
+				content: () => getImageURL(post.value.poster_path),
 			},
 		],
 	});
