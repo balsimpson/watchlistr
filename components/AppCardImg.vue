@@ -3,7 +3,7 @@
 
 	<div
 		v-if="item"
-		class="relative transition border border-transparent rounded-lg shadow hover:border-amber-500 h-full overflow-hidden"
+		class="relative transition border border-transparent rounded-lg shadow hover:border-amber-500 h-full overflow-hidden "
 	>
 		<div class="absolute inset-0 rounded-lg bg-gradient-to-t from-black">
 			<div class="absolute inset-x-0 bottom-5">

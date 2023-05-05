@@ -1,12 +1,12 @@
 <template>
 	<div class="max-w-4xl mx-auto p-4 mt-12">
-		<div class="pb-12">
-			<div class="text-3xl font-semibold text-stone-300">Mindfuck Movies</div>
+		<div v-if="stonercomedies && stonercomedies.length" class="pb-12">
+			<div class="text-3xl font-semibold text-stone-300">Stoner Comedies</div>
 			<AppCarousel :items="stonercomedies"/>
 		</div>
-		<div class="pb-12">
-			<div class="text-3xl font-semibold text-stone-300">Stoner Comedies</div>
-			<AppCarousel />
+		<div v-if="mindfuck && mindfuck.length" class="pb-12">
+			<div class="text-3xl font-semibold text-stone-300">Mindfuck Movies</div>
+			<AppCarousel :items="mindfuck"/>
 		</div>
 		<div v-if="items" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 			<div v-for="item in items">
@@ -24,6 +24,11 @@
 const { data: items, pending } = useFetch("/api/post")
 
 const stonercomedies = computed(() => {
+	// @ts-ignore
+	return items.value.filter(item => item.tags.includes("stoner"))
+})
+
+const mindfuck = computed(() => {
 	// @ts-ignore
 	return items.value.filter(item => item.tags.includes("mindfuck"))
 })
