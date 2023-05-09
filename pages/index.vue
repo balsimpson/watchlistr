@@ -40,7 +40,7 @@ useHead({
 			},
 			{
 				property: "og:image",
-				content: "/siteimage.png",
+				content: "https://watchlistr.in/siteimage.png",
 			},
 			{
 				property: "og:url",
@@ -61,7 +61,7 @@ useHead({
 			},
 			{
 				name: "twitter:image",
-				content: "/siteimage.png",
+				content: "https://watchlistr.in/siteimage.png",
 			},
 		],
 	});
