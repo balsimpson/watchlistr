@@ -46,6 +46,11 @@ export const createSlug = (title, id) => {
   }
 }
 
+export const convertedStr = (str) => str
+  .split("-") // split the string into an array of words
+  .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // capitalize the first letter of each word
+  .join(" "); // join the words back into a string with spaces between them
+
 export const getPostDetails = (data) => {
 
   if (data && data.content) {

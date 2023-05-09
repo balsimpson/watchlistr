@@ -213,6 +213,26 @@
 						</svg>
 					</button>
 
+					<!-- movie -->
+					<button
+						@click.prevent="addMovie"
+						class="cursor-pointer hover:text-teal-500"
+						:class="[editor.isActive('link') ? 'is-active text-teal-500' : '']"
+					>
+						<svg
+							class="crayons-icon"
+							height="24"
+							viewBox="0 0 24 24"
+							width="24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M18.364 15.536 16.95 14.12l1.414-1.414a5.001 5.001 0 0 0-3.531-8.551 5 5 0 0 0-3.54 1.48L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 1 1 9.9 9.9l-1.415 1.414zm-2.828 2.828-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607 1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z"
+								fill="currentColor"
+							/>
+						</svg>
+					</button>
+
 					<!-- image -->
 					<label
 						class="flex flex-col items-center transition-colors cursor-pointer"
@@ -375,6 +395,33 @@
 					<!-- <IconFormatPaint @click="editor.chain().focus().toggleHighlight().run()"
           class="w-8 cursor-pointer hover:text-cyan-600" :class="[editor.isActive('highlight') ? 'is-active text-teal-600' : '' ]" /> -->
 				</div>
+				<!-- add movie -->
+				<div
+					v-if="showAddYTLink"
+					@keydown.esc="showAddYTLink = !showAddYTLink"
+					class="absolute z-20 w-full p-2 bg-white top-[74px] border-stone-300 sm:top-[60px]"
+					tabindex="0"
+				>
+					<div class="flex items-center h-full space-x-2">
+						<input
+							v-model="ytLink"
+							v-focus
+							type="url"
+							class="w-full px-2 py-1 border rounded focus:outline-none focus:border-teal-500"
+							placeholder="Enter a YouTube video URL"
+						/>
+						<button
+							@click="addVideo"
+							class="w-20 h-8 text-sm font-semibold text-white uppercase bg-teal-600 rounded"
+							:class="[
+								ytLink ? 'opacity-100' : 'opacity-50 pointer-events-none',
+							]"
+						>
+							add
+						</button>
+					</div>
+				</div>
+
 				<!-- add youtube link -->
 				<div
 					v-if="showAddYTLink"
@@ -775,6 +822,58 @@
 		}
 
 		isUploadingImage.value = false;
+	};
+
+	// add YouTube video
+	const addMovie = (slug) => {
+		// get movie details
+
+		// insert HTML
+		editor.value.commands.insertContent(`<div
+		class="flex flex-col sm:flex-row h-auto bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden"
+	>
+		<!-- {{ post }} -->
+		<div class="bg-blue-600 sm:w-1/5 shrink-0">
+			<img
+				:src="post.image"
+				alt=""
+				class="sm:h-full h-36 w-full object-cover"
+			/>
+		</div>
+		<div class="flex flex-col">
+			<div class="flex-grow p-4 md:p-6">
+				<span class="block mb-1 text-xs font-semibold uppercase text-blue-600">
+					{{ new Date(post.published_at).toDateString() }}
+				</span>
+				<NuxtLink
+					:to="{
+						name: 'blog-slug',
+						params: {
+							slug: post.slug,
+						},
+					}"
+				>
+					<h3 class="text-xl font-semibold text-gray-800">
+						{{ post.title }}
+					</h3>
+				</NuxtLink>
+				<p class="mt-3 text-gray-500 line-clamp-4">
+					{{ post.description }}
+				</p>
+			</div>
+			<NuxtLink
+				v-if="showEditBtn"
+				:to="{
+					name: 'admin-edit-slug',
+					params: {
+						slug: post.slug,
+					},
+				}"
+			>
+				Edit
+			</NuxtLink>
+		</div>
+	</div>`)
 	};
 
 	// add YouTube video

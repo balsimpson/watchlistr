@@ -10,7 +10,7 @@
 
 <script setup>
 	const route = useRoute();
-	const genre = route.params.slug.charAt(0).toUpperCase() + route.params.slug.slice(1)
+	const genre = convertedStr(route.params.slug)
 	const { data: items } = await useFetch(
 		`/api/genre/?genre=${genre}`,
 		{ initialCache: false }
