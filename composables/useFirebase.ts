@@ -180,7 +180,7 @@ export const getDocsFromFirestore = async (collectionName: string) => {
 * @returns {Array} array of items
 * @example getOrderedDocsFromFirestore('posts', 'created_at', 3)
 */
-export const getOrderedDocsFromFirestore = async (collectionName: string, order: string = "created_at", count: number) => {
+export const getOrderedDocsFromFirestore = async (collectionName: string, order="created_at", count: number) => {
 	try {
 	  const db = getFirestore();
 	  let items: DocumentData[] = [];

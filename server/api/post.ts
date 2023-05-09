@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
     // @ts-ignore
     return await getDocFromFirestoreWithSlug("media", query.slug)
   }
-
+  
+  // @ts-ignore
   return await getOrderedDocsFromFirestore("media")
 })

@@ -20,5 +20,5 @@ export default defineEventHandler(async (event) => {
   }
 
   // @ts-ignore
-  return await getOrderedDocsFromFirestore("posts")
+  return await getOrderedDocsFromFirestore("posts", "published_at")
 })
