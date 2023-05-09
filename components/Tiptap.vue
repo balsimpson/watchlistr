@@ -703,7 +703,9 @@
 					levels: [1, 2, 3],
 				},
 			}),
-			Image,
+			Image.configure({
+				inline: true,
+			}),
 			Link.configure({
 				openOnClick: true,
 			}),

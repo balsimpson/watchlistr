@@ -24,16 +24,27 @@
 					<span class="text-cyan-400">Movie</span>
 				</div>
 
-				<div class="flex flex-wrap gap-2 mt-3 justify-center sm:justify-start">
-					<TypeChip v-for="genre in post.genres"
-					:key="post" :title="genre" />
+				<div class="mt-4">
+					<h2
+						class="text-xl font-semibold leading-none  text-center text-stone-400 sm:text-left mb-2"
+					>
+						Language
+					</h2>
+					<p class="mb-4 leading-6 text-center text-stone-400 sm:text-left">
+						{{ getSpokenLanguage(post.spoken_languages).join(", ") }}
+					</p>
 				</div>
 
-				<!-- <p
-					class="mt-2 mb-4 text-sm leading-6 text-center text-stone-400 sm:text-left pt-3"
+				<div class="flex flex-wrap gap-2 mt-3 justify-center sm:justify-start">
+					<TypeChip v-for="genre in post.genres" :key="post" :title="genre" />
+				</div>
+
+				<p
+					class="mt-2 mb-4 leading-6 text-center text-stone-400 sm:text-left pt-3"
 				>
 					{{ post.overview }}
-				</p> -->
+				</p>
+				
 				<div>
 					<ul
 						class="mt-2 mb-4 text-sm leading-6 text-center text-stone-400 sm:text-left pt-6"
@@ -90,7 +101,11 @@
 			},
 			{
 				property: "og:url",
-				content: "https://watchlistr.in/" + post.value.media_type + "/" + post.value.slug,
+				content:
+					"https://watchlistr.in/" +
+					post.value.media_type +
+					"/" +
+					post.value.slug,
 			},
 			{
 				name: "twitter:card",

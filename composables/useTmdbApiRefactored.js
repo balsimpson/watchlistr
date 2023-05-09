@@ -126,6 +126,18 @@ const getLanguage = (lang) => {
 	return language;
 }
 
+const getSpokenLanguage = (langsArray) => {
+	if (!langsArray) return;
+
+	let languages = []
+
+	langsArray.map(lang => {
+		languages.push(lang.english_name)
+	})
+	
+	return languages;
+}
+
 const getGenre = (genreIds) => {
 	const genres = {
 		28: "Action",
@@ -255,9 +267,18 @@ const searchGenre = (genre) => {
  * @example getImageURL('/path/to/file.jpg', 'w500'));
  */
 
-const getImageURL = (path, size = "original") => {
+const getImageURL = (path, size = "large") => {
+	const poster_sizes = {
+		tiny: "w92",
+		small: "w154",
+		medium: "w185",
+		large: "w342",
+		xl: "w500",
+		huge: "w780",
+		original: "original"
+	}
 	if (path) {
-		return `https://image.tmdb.org/t/p/${size}${path}`;
+		return `https://image.tmdb.org/t/p/${poster_sizes[size]}${path}`;
 	} else {
 		return "imgnotfound.png";
 	}
@@ -401,4 +422,4 @@ async function doFetch(url) {
 	}
 }
 
-export { search, getEpisodes, getShowDetails, getWatchProvider, getYear, getLanguage, getImageURL, getFormattedShowDetails, getFormattedMovieDetails, searchGenre, getGenre, getGenreText };
+export { search, getEpisodes, getShowDetails, getWatchProvider, getYear, getLanguage, getImageURL, getFormattedShowDetails, getFormattedMovieDetails, searchGenre, getGenre, getGenreText, getSpokenLanguage };

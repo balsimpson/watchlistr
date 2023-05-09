@@ -6,32 +6,35 @@
 			tabindex="0"
 			rows="1"
 			class="w-full h-auto py-4 text-2xl font-bold bg-transparent shrink-0 sm:text-4xl focus:outline-none placeholder-stone-400"
-			:class="[error.title ? 'ring-red-500 ring-1':'']"
+			:class="[error.title ? 'ring-red-500 ring-1' : '']"
 			placeholder="Your post title..."
 			v-model="postTitle"
 		></textarea>
-		
-		<div class="flex-grow w-full mt-2 h-screen overflow-y-scroll" >
-			<Tiptap @update="docUpdated"/>
+
+		<div class="flex-grow w-full mt-2 h-screen overflow-y-scroll">
+			<Tiptap @update="docUpdated" />
 		</div>
 
 		<div class="shrink-0">
 			<TagInput @updated="addTags" :suggestions="[]" class="py-2 border-t" />
 			<div class="flex items-center justify-between max-w-2xl bg-white">
-				<NuxtLink to="/admin/posts" class="px-4 py-1 border rounded">Cancel</NuxtLink>
+				<NuxtLink to="/admin/posts" class="px-4 py-1 border rounded"
+					>Cancel</NuxtLink
+				>
 				<div class="flex space-x-6">
 					<button>Save draft</button>
 					<button
 						@click.prevent="saveDoc('published')"
-						class="inline-flex px-4 py-1 font-bold tracking-wide text-teal-800 transition bg-cyan-500 border-2 border-cyan-500 rounded cursor-pointer hover:bg-white hover:text-cyan-500"
+						class="inline-flex px-4 py-1 font-bold tracking-wide text-white transition bg-teal-700 border-2 border-teal-700 rounded cursor-pointer hover:bg-white hover:text-cyan-500"
+						:class="[
+							publishBtnText == 'Publishing...'
+								? 'pointer-events-none opacity-50'
+								: '',
+							postTitle && editorPost.content[0]?.content ? '' : 'pointer-events-none opacity-50',
+						]"
 					>
-						<span
-							class="ml-3"
-							:class="[
-								publishBtnText == 'Publishing...' ? 'pointer-events-none' : '',
-							]"
-							>{{ publishBtnText }}</span
-						>
+						<!-- <pre>{{ postTitle }}</pre> -->
+						<span class="ml-3">{{ publishBtnText }}</span>
 					</button>
 				</div>
 			</div>
@@ -57,7 +60,7 @@
 			"-" +
 			("0" + new Date().getDate()).slice(-2)
 	);
-	const editorPost = ref({});
+	const editorPost = ref({content: [{content: Array}]});
 	const publishBtnText = ref("Publish");
 	const draftBtnText = ref("Save Draft");
 
@@ -71,6 +74,7 @@
 	const userCookie = useCookie("userCookie");
 
 	const docUpdated = (doc: {}) => {
+		// @ts-ignore
 		editorPost.value = doc;
 	};
 
@@ -130,7 +134,8 @@
 			textarea.value.style.height = "auto";
 			textarea.value.style.height = textarea.value.scrollHeight + "px";
 		} else {
-			textarea.value.style.height = 22 + "px";
+			// textarea.value.style.height = 22 + "px";
+			textarea.value.style.height = "auto";
 		}
 	}
 

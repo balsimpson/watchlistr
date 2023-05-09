@@ -4,7 +4,7 @@
 		class="flex max-w-5xl mx-auto mt-2 space-x-2 overflow-scroll snap-mandatory snap-x scroll-container"
 	>
 	<!-- <pre class="text-stone-400">{{ items }}</pre> -->
-		<AppCardImg v-for="item in items" :key="item" :item="item" class="max-w-[140px] shrink-0 snap-start"></AppCardImg>
+		<AppCardImg v-for="item in items" :key="item" :item="item" class="max-w-[200px] shrink-0 snap-start"></AppCardImg>
 		<!-- <div class="max-w-96 shrink-0 snap-start">
 			<a
 				href="/list/an-enjoyable-agatha-christie-murder-mystery_2I8uy0nB0FmQhZQSfwOH"

@@ -90,7 +90,7 @@
 				<div class="flex p-3">
 					<div v-if="result.poster_path" class="w-12 h-12 mr-3">
 						<img
-							:src="getImageURL(result.poster_path, 'w92')"
+							:src="getImageURL(result.poster_path, 'small')"
 							alt=""
 							class="object-cover w-full h-full rounded"
 						/>

@@ -32,7 +32,7 @@ export const signInUser = async (email: string, password: string) => {
 		console.log(errorCode, errorMessage);
 
 		if (errorCode === "auth/user-not-found") {
-			return "You are not authorised.";
+			return "User not found";
 		}
 		if (errorCode === "auth/wrong-password") {
 			return "Wrong password";
@@ -171,6 +171,39 @@ export const getDocsFromFirestore = async (collectionName: string) => {
 		return error;
 	}
 };
+
+/**
+* Get documents ordered from a collection
+* @param {String} collectionName - name of the collection
+* @param {String} order - the property to order by
+* @param {String} count - limit number of items to fetch
+* @returns {Array} array of items
+* @example getOrderedDocsFromFirestore('posts', 'created_at', 3)
+*/
+export const getOrderedDocsFromFirestore = async (collectionName: string, order: string = "created_at", count: number) => {
+	try {
+	  const db = getFirestore();
+	  let items: DocumentData[] = [];
+	  let q: Query<DocumentData>;
+  
+	  if (count) {
+		q = query(collection(db, collectionName), orderBy(order, "desc"), limit(count));
+	  } else {
+		q = query(collection(db, collectionName), orderBy(order, "desc"));
+	  }
+  
+	  let res = await getDocs(q);
+	  res.forEach((doc) => {
+		let newdoc = doc.data();
+		newdoc.uid = doc.id;
+		items.push(newdoc);
+	  });
+	  return items;
+	} catch (error) {
+	  console.log('firebase-error', error);
+	  return error;
+	}
+  }
 
 export const initUser = async () => {
 	const auth = getAuth();
