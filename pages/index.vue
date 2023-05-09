@@ -23,6 +23,48 @@
 </template>
 
 <script lang="ts" setup>
+useHead({
+		title: () => "Watchlistr.in - Movie Recommendations from Cultured Redditors",
+		meta: [
+			{
+				name: "description",
+				content: "Discover your next favorite movie with Watchlistr.in! Hand-picked recommendations from cultured redditors, from mind-bending thrillers to laugh out loud comedies.",
+			},
+			{
+				property: "og:title",
+				content: "Watchlistr.in - Movie Recommendations from Cultured Redditors",
+			},
+			{
+				property: "og:description",
+				content: "Discover your next favorite movie with Watchlistr.in! Hand-picked recommendations from cultured redditors, from mind-bending thrillers to laugh out loud comedies.",
+			},
+			{
+				property: "og:image",
+				content: "/siteimage.png",
+			},
+			{
+				property: "og:url",
+				content:
+					"https://watchlistr.in/"
+			},
+			{
+				name: "twitter:card",
+				content: "summary_large_image",
+			},
+			{
+				name: "twitter:title",
+				content: "Watchlistr.in - Movie Recommendations from Cultured Redditors",
+			},
+			{
+				name: "twitter:description",
+				content: "Discover your next favorite movie with Watchlistr.in! Hand-picked recommendations from cultured redditors, from mind-bending thrillers to laugh out loud comedies.",
+			},
+			{
+				name: "twitter:image",
+				content: "/siteimage.png",
+			},
+		],
+	});
 const { data: items, pending } = useFetch("/api/post")
 
 const stonercomedies = computed(() => {
