@@ -36,7 +36,7 @@ useHead({
 			},
 			{
 				property: "og:description",
-				content: "Discover your next favorite movie with Watchlistr.in! Hand-picked recommendations from cultured redditors, from mind-bending thrillers to laugh out loud comedies.",
+				content: "Discover your next favorite movie with Watchlistr.in! From mind-bending thrillers to laugh out loud comedies, get hand-picked recommendations from cultured redditors.",
 			},
 			{
 				property: "og:image",
@@ -57,7 +57,7 @@ useHead({
 			},
 			{
 				name: "twitter:description",
-				content: "Discover your next favorite movie with Watchlistr.in! Hand-picked recommendations from cultured redditors, from mind-bending thrillers to laugh out loud comedies.",
+				content: "Discover your next favorite movie with Watchlistr.in! From mind-bending thrillers to laugh out loud comedies, get hand-picked recommendations from cultured redditors.",
 			},
 			{
 				name: "twitter:image",
