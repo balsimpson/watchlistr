@@ -215,7 +215,13 @@
 
 					<!-- movie -->
 					<button
-						@click.prevent="addMovie"
+						@click="
+							editor
+								.chain()
+								.focus()
+								.insertTable({ rows: 1, cols: 2})
+								.run()
+						"
 						class="cursor-pointer hover:text-teal-500"
 						:class="[editor.isActive('link') ? 'is-active text-teal-500' : '']"
 					>
@@ -609,6 +615,10 @@
 	// import Blockquote from "@tiptap/extension-blockquote";
 	import Youtube from "@tiptap/extension-youtube";
 	import CharacterCount from "@tiptap/extension-character-count";
+	import Table from "@tiptap/extension-table";
+	import TableCell from "@tiptap/extension-table-cell";
+	import TableHeader from "@tiptap/extension-table-header";
+	import TableRow from "@tiptap/extension-table-row";
 	import { BubbleMenu, useEditor, EditorContent } from "@tiptap/vue-3";
 	import { Mark, markPasteRule, mergeAttributes } from "@tiptap/core";
 
@@ -773,6 +783,10 @@
 					return "Write something..";
 				},
 			}),
+			Table,
+			TableCell,
+			TableHeader,
+			TableRow,
 		],
 		editorProps: {
 			attributes: {
@@ -873,7 +887,7 @@
 				Edit
 			</NuxtLink>
 		</div>
-	</div>`)
+	</div>`);
 	};
 
 	// add YouTube video
@@ -1139,5 +1153,66 @@
 
 	.prose :where(code):not(:where([class~="not-prose"] *))::after {
 		content: "";
+	}
+
+	/* tables */
+	table {
+		border-collapse: collapse;
+		table-layout: fixed;
+		width: 100%;
+		margin: 0;
+		overflow: hidden;
+	}
+
+	td,
+	th {
+		min-width: 1em;
+		border: 2px solid #ced4da;
+		padding: 3px 5px;
+		vertical-align: top;
+		box-sizing: border-box;
+		position: relative;
+	}
+
+	th {
+		font-weight: bold;
+		text-align: left;
+		background-color: #f1f3f5;
+	}
+
+	.selectedCell:after {
+		z-index: 2;
+		position: absolute;
+		content: "";
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background: rgba(200, 200, 255, 0.4);
+		pointer-events: none;
+	}
+
+	.column-resize-handle {
+		position: absolute;
+		right: -2px;
+		top: 0;
+		bottom: -2px;
+		width: 4px;
+		background-color: #adf;
+		pointer-events: none;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	.tableWrapper {
+		padding: 1rem 0;
+		overflow-x: auto;
+	}
+
+	.resize-cursor {
+		cursor: ew-resize;
+		cursor: col-resize;
 	}
 </style>
