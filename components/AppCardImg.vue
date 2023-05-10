@@ -3,7 +3,7 @@
 
 	<div
 		v-if="item"
-		@click.prevent="navigateTo('/' + item.media_type + '/' + item.slug)"
+
 		class="relative transition border border-transparent rounded-lg shadow hover:border-amber-500 h-full overflow-hidden cursor-pointer"
 	>
 		<div class="absolute inset-0 rounded-lg bg-gradient-to-t from-black">

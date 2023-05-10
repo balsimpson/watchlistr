@@ -19,12 +19,14 @@
 		<div v-if="items" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 			<div v-for="item in items">
 				<!-- <NuxtLink v-if="item" :to="'/' + item.media_type + '/' + item.slug"> -->
-					<AppCardImg  :item="item"/>
+					<AppCardImgTitle  :item="item"/>
 				<!-- </NuxtLink> -->
 			</div>
 		</div>
 
 		<div v-if="pending">Loading...</div>
+
+		<ScrollTop />
 	</div>
 </template>
 
