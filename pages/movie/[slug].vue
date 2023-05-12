@@ -1,16 +1,38 @@
 <template>
 	<div
 		v-if="post"
-		class="flex flex-wrap items-center justify-center max-w-4xl mx-auto sm:mt-12 mt-3 p-3 sm:px-6"
+		class="flex flex-wrap items-center justify-center max-w-4xl mx-auto sm:mt-12 mt-3 px-6"
 	>
 		<!-- <pre class="text-stone-400">{{ post }}</pre> -->
 		<div class="grid gap-6 sm:grid-cols-6 text-stone-400 w-full">
 			<div class="relative sm:col-span-2">
 				<img
-					class="object-cover object-center w-full mx-auto rounded-lg"
+					class="object-cover object-center w-full mx-auto rounded-lg h-64 sm:h-auto"
 					:alt="post.title"
 					:src="getImageURL(post.poster_path)"
 				/>
+
+				<button
+					@click.prevent="isModalActive = !isModalActive"
+					class="flex items-center justify-center py-3 px-6 bg-amber-500 hover:bg-amber-600 text-stone-800 rounded-lg shadow-lg uppercase tracking-wider font-semibold text-sm sm:text-base transition duration-300 ease-in-out w-full mt-3"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M12 4.5v15m7.5-7.5h-15"
+						/>
+					</svg>
+
+					<span class="ml-3">Add to Watchlist</span>
+				</button>
 			</div>
 			<div class="sm:col-span-4">
 				<h1
@@ -24,9 +46,11 @@
 					<span class="text-cyan-400">Movie</span>
 				</div>
 
+				<!-- <pre>{{ post }}</pre> -->
+
 				<div class="mt-4">
 					<h2
-						class="text-xl font-semibold leading-none  text-center text-stone-400 sm:text-left mb-2"
+						class="text-xl font-semibold leading-none text-center text-stone-400 sm:text-left mb-2"
 					>
 						Language
 					</h2>
@@ -44,14 +68,24 @@
 				>
 					{{ post.overview }}
 				</p>
-				
+
 				<div>
+					<h2
+						class="text-2xl font-bold leading-none tracking-tighter text-center text-stone-400 sm:text-left md:text-4xl mb-2"
+					>
+						Crew
+					</h2>
 					<ul
-						class="mt-2 mb-4 text-sm leading-6 text-center text-stone-400 sm:text-left pt-6"
+						class="mt-2 mb-4 text-sm leading-6 text-center text-stone-400 sm:text-left"
 					>
 						<!-- loop through each crew member -->
-						<li class="mb-2" v-for="member in post.crew" :key="member.name">
-							<span class="font-bold">{{ member.job }}:</span> {{ member.name }}
+						<li
+							class="mb-2"
+							v-for="member in getFormattedCrew(post.crew)"
+							:key="member[0]"
+						>
+							<span class="font-bold">{{ member[0] }}:</span>
+							{{ member[1].join(", ") }}
 						</li>
 					</ul>
 
@@ -69,12 +103,16 @@
 				</div>
 			</div>
 		</div>
+
+		<AppModal :isActive="isModalActive" @close="isModalActive = !isModalActive" class="flex items-center"> 
+			<LoginForm />
+		</AppModal>
 	</div>
 </template>
 
 <script setup>
 	const route = useRoute();
-
+	const isModalActive = ref(false)
 	const { data: post } = await useFetch(
 		`/api/post/?slug=${route.params.slug}`,
 		{ initialCache: false }

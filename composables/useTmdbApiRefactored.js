@@ -75,7 +75,7 @@ const search = async (query, type) => {
 		console.log(error);
 		return error;
 	}
-}
+};
 
 const getEpisodes = async (showId, seasonNo = 1) => {
 	try {
@@ -85,7 +85,7 @@ const getEpisodes = async (showId, seasonNo = 1) => {
 		console.log(error.message);
 		return error;
 	}
-}
+};
 
 const getShowDetails = async (showId) => {
 	try {
@@ -95,7 +95,7 @@ const getShowDetails = async (showId) => {
 		console.log(error.message);
 		return error;
 	}
-}
+};
 
 const getWatchProvider = async (type, id) => {
 	try {
@@ -112,31 +112,31 @@ const getWatchProvider = async (type, id) => {
 		console.log(error.message);
 		return error;
 	}
-}
+};
 
 const getYear = (date) => {
 	if (!date) return;
 	let year = date.split("-")[0];
 	return year;
-}
+};
 
 const getLanguage = (lang) => {
 	if (!lang) return;
 	let language = languages[lang];
 	return language;
-}
+};
 
 const getSpokenLanguage = (langsArray) => {
 	if (!langsArray) return;
 
-	let languages = []
+	let languages = [];
 
-	langsArray.map(lang => {
-		languages.push(lang.english_name)
-	})
-	
+	langsArray.map((lang) => {
+		languages.push(lang.english_name);
+	});
+
 	return languages;
-}
+};
 
 const getGenre = (genreIds) => {
 	const genres = {
@@ -174,21 +174,21 @@ const getGenre = (genreIds) => {
 			// genretxt.push(genres[genre]);
 			genretxt.push({
 				value: genre,
-				text: genres[genre]
+				text: genres[genre],
 			});
 		});
 	} else {
 		// genretxt.push(genres[genre]);
 		genretxt.push({
 			value: genreIds,
-			text: genres[genreIds]
-		})
+			text: genres[genreIds],
+		});
 	}
 	return genretxt;
-}
+};
 
 const getGenreText = (genreIds) => {
-	console.log("ids", genreIds)
+	console.log("ids", genreIds);
 	const genres = {
 		28: "Action",
 		12: "Adventure",
@@ -221,45 +221,45 @@ const getGenreText = (genreIds) => {
 	const genretxt = [];
 	if (genreIds && genreIds.length) {
 		genreIds.forEach((genre) => {
-			console.log(genre.id );
+			console.log(genre.id);
 			genretxt.push(genre.name);
 		});
 	}
 	return genretxt;
-}
+};
 
 const searchGenre = (genre) => {
 	const genres = {
-		action: 'Action__28',
-		adventure: 'Adventure__12',
-		'action-adventure': 'Action & Adventure__10759',
-		animation: 'Animation__16',
-		comedy: 'Comedy__35',
-		crime: 'Crime__80',
-		documentary: 'Documentary__99',
-		drama: 'Drama__18',
-		family: 'Family__10751',
-		fantasy: 'Fantasy__14',
-		history: 'History__36',
-		horror: 'Horror__27',
-		kids: 'Kids__10762',
-		music: 'Music__10402',
-		mystery: 'Mystery__9648',
-		news: 'News__10763',
-		reality: 'Reality__10764',
-		romance: 'Romance__10749',
-		'science-fiction': 'Science Fiction__878',
-		'scifi-fantasy': 'Sci-Fi & Fantasy__10765',
-		soap: 'Soap__10766',
-		talk: 'Talk__10767',
-		tv_movie: 'TV Movie__10770',
-		thriller: 'Thriller__53',
-		war: 'War__10752',
-		war_politics: 'War & Politics__10768',
-		western: 'Western__37',
+		action: "Action__28",
+		adventure: "Adventure__12",
+		"action-adventure": "Action & Adventure__10759",
+		animation: "Animation__16",
+		comedy: "Comedy__35",
+		crime: "Crime__80",
+		documentary: "Documentary__99",
+		drama: "Drama__18",
+		family: "Family__10751",
+		fantasy: "Fantasy__14",
+		history: "History__36",
+		horror: "Horror__27",
+		kids: "Kids__10762",
+		music: "Music__10402",
+		mystery: "Mystery__9648",
+		news: "News__10763",
+		reality: "Reality__10764",
+		romance: "Romance__10749",
+		"science-fiction": "Science Fiction__878",
+		"scifi-fantasy": "Sci-Fi & Fantasy__10765",
+		soap: "Soap__10766",
+		talk: "Talk__10767",
+		tv_movie: "TV Movie__10770",
+		thriller: "Thriller__53",
+		war: "War__10752",
+		war_politics: "War & Politics__10768",
+		western: "Western__37",
 	};
 	return genres[genre];
-}
+};
 
 /**
  * @param  {string} path - The path to the file
@@ -275,19 +275,20 @@ const getImageURL = (path, size = "large") => {
 		large: "w342",
 		xl: "w500",
 		huge: "w780",
-		original: "original"
-	}
+		original: "original",
+	};
 	if (path) {
 		return `https://image.tmdb.org/t/p/${poster_sizes[size]}${path}`;
 	} else {
 		return "imgnotfound.png";
 	}
-}
+};
 
 const getFormattedShowDetails = async (showId, seasonNo = 1) => {
-
 	let showDetails = await doFetch(`${BASE_URL}/tv/${showId}?${API_KEY}`);
-	let episodes = await doFetch(`${BASE_URL}/tv/${showId}/season/${seasonNo}?${API_KEY}`);
+	let episodes = await doFetch(
+		`${BASE_URL}/tv/${showId}/season/${seasonNo}?${API_KEY}`
+	);
 	let credits = await doFetch(`${BASE_URL}/tv/${showId}/credits?${API_KEY}`);
 
 	let cast = credits.cast.slice(0, 3) || [];
@@ -300,17 +301,23 @@ const getFormattedShowDetails = async (showId, seasonNo = 1) => {
 		cast.forEach((actor) => {
 			castNames.push({
 				name: actor.name,
-				character: actor.character
+				character: actor.character,
 			});
 		});
 	}
 
 	if (crew.length) {
 		crew.forEach((actor) => {
-			if (actor.job == "Director" || actor.job == "Screenplay" || actor.job == "Story" || actor.job == "Director of Photography" || actor.job == "Editor") {
+			if (
+				actor.job == "Director" ||
+				actor.job == "Screenplay" ||
+				actor.job == "Story" ||
+				actor.job == "Director of Photography" ||
+				actor.job == "Editor"
+			) {
 				crewNames.push({
 					name: actor.name,
-					job: actor.job
+					job: actor.job,
 				});
 			}
 		});
@@ -351,18 +358,20 @@ const getFormattedShowDetails = async (showId, seasonNo = 1) => {
 		homepage: showDetails.homepage,
 		// cast: castNames,
 		// crew: crewNames,
-		media_type: 'tv'
-	}
+		media_type: "tv",
+	};
 
 	show.seasons[seasonNo - 1].episodes = episodes.episodes;
 
 	// console.log('show', show)
 	return show;
-}
+};
 
 const getFormattedMovieDetails = async (movieId) => {
 	let movieDetails = await doFetch(`${BASE_URL}/movie/${movieId}?${API_KEY}`);
-	let credits = await doFetch(`${BASE_URL}/movie/${movieId}/credits?${API_KEY}`);
+	let credits = await doFetch(
+		`${BASE_URL}/movie/${movieId}/credits?${API_KEY}`
+	);
 
 	let cast = credits.cast.slice(0, 3) || [];
 	let castNames = [];
@@ -374,23 +383,32 @@ const getFormattedMovieDetails = async (movieId) => {
 		cast.forEach((actor) => {
 			castNames.push({
 				name: actor.name,
-				character: actor.character
+				character: actor.character,
 			});
 		});
 	}
 
 	if (crew.length) {
 		crew.forEach((actor) => {
-			if (actor.job == "Director" || actor.job == "Screenplay" || actor.job == "Story" || actor.job == "Director of Photography" || actor.job == "Editor" || actor.job == "Music" || actor.job == "Original Music Composer" || actor.job == "Art Direction") {
+			if (
+				actor.job == "Director" ||
+				actor.job == "Screenplay" ||
+				actor.job == "Story" ||
+				actor.job == "Director of Photography" ||
+				actor.job == "Editor" ||
+				actor.job == "Music" ||
+				actor.job == "Original Music Composer" ||
+				actor.job == "Art Direction"
+			) {
 				crewNames.push({
 					name: actor.name,
-					job: actor.job
+					job: actor.job,
 				});
 			}
 		});
 	}
 
-	console.log('movieDetails', movieDetails);
+	console.log("movieDetails", movieDetails);
 	// console.log('credits', credits);
 
 	let movie = {
@@ -406,10 +424,31 @@ const getFormattedMovieDetails = async (movieId) => {
 		release_date: movieDetails.release_date,
 		cast: castNames,
 		crew: crewNames,
-		media_type: 'movie'
-	}
+		media_type: "movie",
+	};
 	return movie;
-}
+};
+
+const getFormattedCrew = (crew) => {
+	const crewByJob = crew.reduce((acc, { name, job }) => {
+		if (!acc[job]) {
+			acc[job] = [name];
+		} else if (!acc[job].includes(name)) {
+			acc[job].push(name);
+		}
+		return acc;
+	}, {});
+
+	// const result = Object.entries(crewByJob).reduce((acc, [job, names]) => {
+	// 	if (names.length > 1) {
+	// 		acc[job] = names.join(", ");
+	// 	}
+	// 	return acc;
+	// }, {});
+
+	// console.log("result", result);
+	return Object.entries(crewByJob);
+};
 
 async function doFetch(url) {
 	try {
@@ -422,4 +461,19 @@ async function doFetch(url) {
 	}
 }
 
-export { search, getEpisodes, getShowDetails, getWatchProvider, getYear, getLanguage, getImageURL, getFormattedShowDetails, getFormattedMovieDetails, searchGenre, getGenre, getGenreText, getSpokenLanguage };
+export {
+	search,
+	getEpisodes,
+	getShowDetails,
+	getWatchProvider,
+	getYear,
+	getLanguage,
+	getImageURL,
+	getFormattedShowDetails,
+	getFormattedMovieDetails,
+	searchGenre,
+	getGenre,
+	getGenreText,
+	getSpokenLanguage,
+	getFormattedCrew,
+};

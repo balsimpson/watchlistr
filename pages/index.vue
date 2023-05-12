@@ -16,7 +16,7 @@
 		<div v-if="items" class="md:text-[1.8vw] font-semibold text-stone-300 flex items-center shrink-0">All Movies 
 			<!-- <span class="text-amber-500 ml-2 border border-amber-500 rounded px-2 py-1 text-xs">{{ items.length }}</span> -->
 		</div>
-		<div v-if="items" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+		<div v-if="items" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 gap-y-12">
 			<div v-for="item in items">
 				<!-- <NuxtLink v-if="item" :to="'/' + item.media_type + '/' + item.slug"> -->
 					<AppCardImgTitle  :item="item"/>

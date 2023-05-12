@@ -73,9 +73,15 @@ export const getPostDetails = (data) => {
       description = "";
     }
 
-    let image = data.content.find(element => element.type == "image");
+    // let image = data.content.find(element => element.type == "image");
+    let image = data.content.find(element => {
+      if (element.attrs.src) {
+        return element.attrs.src
+      }
+    });
     image = image?.attrs?.src || ""
-
+    
+    console.log('image', image);
     return { description, image }
   }
   // return

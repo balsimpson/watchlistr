@@ -4,13 +4,13 @@
 			v-if="post && post.author"
 			class="flex flex-col h-full max-w-4xl p-5 mx-auto  text-stone-300"
 		>
-			<h3 class="text-3xl font-semibold text-stone-300">
+			<h1 class="text-3xl font-semibold text-stone-300 prose">
 				{{ post.title }}
-			</h3>
+			</h1>
 			<div v-if="post.published_at" class="text-sm italic font-normal mb-4">
 				{{ new Date(post.published_at).toDateString() }}
 			</div>
-			<article v-html="postHtml" class="flex-grow prose font-lato text-stone-400"></article>
+			<article v-if="postHtml" v-html="postHtml" class="flex-grow prose font-lato text-stone-400"></article>
 
 			<!-- <AppFooter /> -->
 			<ScrollTop />
@@ -29,6 +29,7 @@
 	import Image from "@tiptap/extension-image";
 	import Link from "@tiptap/extension-link";
 	import Youtube from "@tiptap/extension-youtube";
+	import movieCardTiptap from '/assets/js/MovieCardTiptap.js';
 	import { serverTimestamp } from "firebase/firestore";
 
 	definePageMeta({
@@ -182,6 +183,7 @@
 				Image,
 				Youtube,
 				Link,
+				movieCardTiptap
 			]);
 		} else {
 			console.log("else");

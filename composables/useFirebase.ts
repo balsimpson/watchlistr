@@ -59,6 +59,39 @@ export const signInUser = async (email: string, password: string) => {
 /**
  * Get a single document from a collection where slug
  * @param {String} collectionName - collection name
+ * @param {String} title - document id
+ * @example getDocMatchingTitle('posts', 'title')
+ */
+export const getDocMatchingTitle = async (
+	collectionName: string,
+	title: string
+) => {
+	try {
+		const db = getFirestore();
+		const q = query(collection(db, collectionName), where("slug", ">=", title));
+		const querySnapshot = await getDocs(q);
+		let item: DocumentData;
+		let items: any[] = [];
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			console.log(title, doc.id, " => ", doc.data());
+			item = doc.data();
+			item.id = doc.id;
+
+			items.push(item)
+		});
+
+		// @ts-ignore
+		return items[0];
+	} catch (error) {
+		console.log("getDocFromFirestore-error", error);
+		return error;
+	}
+};
+
+/**
+ * Get a single document from a collection where slug
+ * @param {String} collectionName - collection name
  * @param {String} slug - document id
  * @example getDocFromFirestoreWithSlug('posts', 'title-slug')
  */

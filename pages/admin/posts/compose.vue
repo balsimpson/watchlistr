@@ -12,7 +12,7 @@
 		></textarea>
 
 		<div class="flex-grow w-full mt-2 h-screen overflow-y-scroll">
-			<Tiptap @update="docUpdated" />
+			<TiptapAddMovieTest @update="docUpdated" />
 		</div>
 
 		<div class="shrink-0">
@@ -26,12 +26,7 @@
 					<button
 						@click.prevent="saveDoc('published')"
 						class="inline-flex px-4 py-1 font-bold tracking-wide text-white transition bg-teal-700 border-2 border-teal-700 rounded cursor-pointer hover:bg-white hover:text-cyan-500"
-						:class="[
-							publishBtnText == 'Publishing...'
-								? 'pointer-events-none opacity-50'
-								: '',
-							postTitle && editorPost.content[0]?.content ? '' : 'pointer-events-none opacity-50',
-						]"
+						
 					>
 						<!-- <pre>{{ postTitle }}</pre> -->
 						<span class="ml-3">{{ publishBtnText }}</span>
@@ -88,6 +83,9 @@
 			// @ts-ignore
 			const { description, image } = getPostDetails(editorPost.value);
 			const slug = createSlug(postTitle.value);
+
+			console.log(description, image);
+			
 			const data = {
 				title: postTitle.value,
 				author: {
@@ -109,7 +107,7 @@
 				published_at: publish_date.value || Date.now(),
 			};
 
-			console.log(data);
+			// console.log(data);
 			let res = await addDocToFirestore("posts", data);
 			console.log(res);
 
