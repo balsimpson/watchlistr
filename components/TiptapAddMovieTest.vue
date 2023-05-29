@@ -6,7 +6,7 @@
 	>
 		<div class="relative">
 			<div
-				class="flex fixed justify-between bg-stone-200 border-b rounded-lg z-20 text-neutral-500 focus:outline-none"
+				class="fixed z-20 flex justify-between border-b rounded-lg bg-stone-200 text-neutral-500 focus:outline-none"
 			>
 				<div
 					class="flex flex-wrap items-center gap-3 p-2 sm:p-4 text-stone-600"
@@ -475,7 +475,7 @@
 
 		<editor-content
 			:editor="editor"
-			class="relative z-10 flex-grow w-full sm:pt-12 pt-20"
+			class="relative z-10 flex-grow w-full pt-20 sm:pt-12"
 		/>
 
 		<div class="relative">
@@ -622,7 +622,7 @@
 	const urlLink = ref("");
 	const movieSlug = ref("");
 
-	const { data: movies, pending } = useFetch("/api/post")
+	const { data: movies, pending } = useFetch("/api/media")
 
 	const isUploadingImage = ref(false);
 
@@ -834,7 +834,7 @@
 	const addMovie = async () => {
 		// get movie details
 		
-		
+		console.log(movies.value);
 		const searchByTitle = fuzzy(movies.value, "title");
 		
 		let result = searchByTitle(movieSlug.value)[0]

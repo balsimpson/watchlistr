@@ -1,42 +1,18 @@
 <template>
-	<node-view-wrapper class="flex w-full items-center gap-x-6">
+	<node-view-wrapper class="flex items-center w-full gap-x-6">
 		<img :src="node.attrs.src" :alt="node.attrs.title" class="w-1/4 h-full" />
 
 		<div class="w-3/4 shrink-0">
 			{{ node.attrs.title }}
+			<!-- <node-view-content contenteditable="true">
+				{{ node.attrs.description }}
+			</node-view-content> -->
 		</div>
 	</node-view-wrapper>
 </template>
-<!-- 
-<script>
-	import { nodeViewProps, NodeViewWrapper } from "@tiptap/vue-3";
-
-	export default {
-		components: {
-			NodeViewWrapper,
-		},
-
-		// props: nodeViewProps,
-
-		props: {
-			node: {
-				type: Object,
-				required: true,
-			},
-		},
-
-		methods: {
-			increase() {
-				this.updateAttributes({
-					count: this.node.attrs.count + 1,
-				});
-			},
-		},
-	};
-</script> -->
 
 <script setup lang="ts">
-	import { NodeViewWrapper } from "@tiptap/vue-3";
+	import { NodeViewWrapper, NodeViewContent } from "@tiptap/vue-3";
 
 	const props = defineProps({
 		node: {

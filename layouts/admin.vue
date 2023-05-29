@@ -3,9 +3,9 @@
 		<!-- ========== MAIN CONTENT ========== -->
 		<!-- Sidebar Toggle -->
 		<div
-			class="sticky top-0 inset-x-0 z-20  border-y px-4 sm:px-6 md:px-8 lg:hidden"
+			class="sticky inset-x-0 top-0 z-20 px-4 border-y sm:px-6 md:px-8 lg:hidden"
 		>
-			<div class="flex items-center py-4 justify-between">
+			<div class="flex items-center justify-between py-4">
 				<!-- Navigation Toggle -->
 				<button
 					@click.prevent="isSidebarOpen = !isSidebarOpen"
@@ -31,7 +31,7 @@
 
 				<!-- Breadcrumb -->
 				<!-- <ol
-					class="ml-3 flex items-center whitespace-nowrap min-w-0"
+					class="flex items-center min-w-0 ml-3 whitespace-nowrap"
 					aria-label="Breadcrumb"
 				>
 					<li
@@ -72,19 +72,19 @@
 		> -->
 		<div
 			id="application-sidebar"
-			class="w-64 flex flex-col absolute top-0 overflow-y-auto h-screen space-y-6 border-r px-2 py-4 border-black lg:-translate-x-0 bg-black text-gray-200 transform transition duration-200 ease-in-out z-30 shadow-md"
+			class="absolute top-0 z-30 flex flex-col w-64 h-screen px-2 py-4 space-y-6 overflow-y-auto text-gray-200 transition duration-200 ease-in-out transform bg-black border-r border-black shadow-md lg:-translate-x-0"
 			:class="[isSidebarOpen ? ' -translate-x-0' : '-translate-x-full']"
 		>
-			<div class="px-6 flex items-center border-b pb-6 border-gray-800">
+			<div class="flex items-center px-6 pb-6 border-b border-gray-800">
 				<!-- <img src="/favicon.png" alt="" class="w-12" /> -->
 				<div>
-					<div class="ml-3 font-bold text-xl tracking-wide">Watchlistr</div>
+					<div class="ml-3 text-xl font-bold tracking-wide">Watchlistr</div>
 					<div class="ml-3 font-semibold text-gray-600">Admin Panel</div>
 				</div>
 			</div>
 			<button
 				@click.prevent="isSidebarOpen = !isSidebarOpen"
-				class="absolute right-3 top-0 text-gray-400 lg:hidden"
+				class="absolute top-0 text-gray-400 right-3 lg:hidden"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@
 				</svg>
 			</button>
 
-			<nav class="p-6 w-full flex flex-col flex-wrap flex-grow">
+			<nav class="flex flex-col flex-wrap flex-grow w-full p-6">
 				<ul class="space-y-1.5">
 
 					<li>
@@ -183,7 +183,7 @@
 
 		<!-- Content -->
 		<div
-			class="w-full lg:h-screen h-[calc(100vh-54px)] lg:pl-72 max-w-4xl lg:max-w-7xl overflow-hidden"
+			class="w-full lg:h-screen h-[calc(100vh-54px)] lg:pl-64 max-w-4xl lg:max-w-7xl overflow-hidden"
 		>
 			<slot />
 		</div>

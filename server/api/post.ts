@@ -16,9 +16,9 @@ export default defineEventHandler(async (event) => {
   // console.log(query.slug)
   if (query.slug) {
     // @ts-ignore
-    return await getDocFromFirestoreWithSlug("media", query.slug)
+    return await getDocFromFirestoreWithSlug("posts", query.slug)
   }
   
   // @ts-ignore
-  return await getOrderedDocsFromFirestore("media")
+  return await getOrderedDocsFromFirestore("posts")
 })

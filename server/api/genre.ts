@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   const app = initializeApp(firebaseConfig);
   if (query.genre) {
     // @ts-ignore
-    let res = await getDocsMatchingGenre("media", query.genre)
+    let res = await getDocsMatchingGenre("media", query.genre, "created_at")
     // console.log(res)
     return res
   }

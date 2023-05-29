@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col h-full max-w-2xl relative p-3 text-stone-600">
+	<div class="relative flex flex-col h-full max-w-2xl p-3 text-stone-600">
 		<textarea
 			@input="adjustTextareaHeight"
 			ref="textarea"
@@ -11,8 +11,8 @@
 			v-model="postTitle"
 		></textarea>
 
-		<div class="flex-grow w-full mt-2 h-screen overflow-y-scroll">
-			<TiptapAddMovieTest @update="docUpdated" />
+		<div class="flex-grow w-full h-full mt-2 overflow-y-scroll">
+			<TiptapAddMovieTest @update="docUpdated" class="flex-grow" />
 		</div>
 
 		<div class="shrink-0">
@@ -26,7 +26,7 @@
 					<button
 						@click.prevent="saveDoc('published')"
 						class="inline-flex px-4 py-1 font-bold tracking-wide text-white transition bg-teal-700 border-2 border-teal-700 rounded cursor-pointer hover:bg-white hover:text-cyan-500"
-						
+						:class="[publishBtnText == 'Published!' ? 'bg-transparent pointer-events-none' : '']"
 					>
 						<!-- <pre>{{ postTitle }}</pre> -->
 						<span class="ml-3">{{ publishBtnText }}</span>
@@ -55,7 +55,7 @@
 			"-" +
 			("0" + new Date().getDate()).slice(-2)
 	);
-	const editorPost = ref({content: [{content: Array}]});
+	const editorPost = ref({ content: [{ content: Array }] });
 	const publishBtnText = ref("Publish");
 	const draftBtnText = ref("Save Draft");
 
@@ -85,7 +85,7 @@
 			const slug = createSlug(postTitle.value);
 
 			console.log(description, image);
-			
+
 			const data = {
 				title: postTitle.value,
 				author: {
@@ -107,18 +107,25 @@
 				published_at: publish_date.value || Date.now(),
 			};
 
-			// console.log(data);
+			console.log(data);
 			let res = await addDocToFirestore("posts", data);
-			console.log(res);
+			// console.log(res);
 
+			// @ts-ignore
+			editorPost.value = {};
+			postTitle.value = "";
+			postTags.value = [];
 			// // @ts-ignore
 			// if (res.type == "document") {
 			// 	toast.success(data.title + " was saved!");
 			// } else {
 			// 	toast.error("Post failed to save! - " + res);
 			// }
-			publishBtnText.value = "Publish";
-			draftBtnText.value = "Save draft";
+			publishBtnText.value = "Published!";
+			setTimeout(() => {
+				publishBtnText.value = "Publish";
+				draftBtnText.value = "Save draft";
+			}, 10000);
 		}
 	};
 

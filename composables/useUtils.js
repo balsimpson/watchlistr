@@ -61,6 +61,8 @@ export const getPostDetails = (data) => {
     //   title = "";
     // }
 
+    // console.log('data', data.content);
+
     let description = data.content.find(element => element.type == "paragraph");
     let txt = "";
     if (description && description.content && description.content.length) {
@@ -73,15 +75,15 @@ export const getPostDetails = (data) => {
       description = "";
     }
 
-    // let image = data.content.find(element => element.type == "image");
+    // let image = data.content.find(element => element.type == "movieCardTiptap");
     let image = data.content.find(element => {
-      if (element.attrs.src) {
+      if (element.type == "movieCardTiptap") {
         return element.attrs.src
       }
     });
     image = image?.attrs?.src || ""
     
-    console.log('image', image);
+    // console.log('image', image);
     return { description, image }
   }
   // return

@@ -1,16 +1,27 @@
 <template>
 	<div class="sm:pt-12">
 		<div
-			v-if="post && post.author"
-			class="flex flex-col h-full max-w-4xl p-5 mx-auto  text-stone-300"
+			v-if="post && post.title"
+			class="flex flex-col h-full max-w-3xl p-5 mx-auto text-stone-300"
 		>
-			<h1 class="text-3xl font-semibold text-stone-300 prose">
-				{{ post.title }}
+
+		<!-- <pre>{{ post }}</pre> -->
+			<h1
+				class="text-3xl font-bold leading-none tracking-tighter sm:text-5xl sm:text-left md:text-6xl"
+			>
+				<span class="text-stone-300"> {{ post.title }} </span>
 			</h1>
-			<div v-if="post.published_at" class="text-sm italic font-normal mb-4">
+			<div v-if="post.published_at" class="mb-4 text-sm italic font-normal">
 				{{ new Date(post.published_at).toDateString() }}
 			</div>
-			<article v-if="postHtml" v-html="postHtml" class="flex-grow prose font-lato text-stone-400"></article>
+			<!-- <div v-if="post.views" class="mb-4 text-sm italic font-normal">
+				{{ post.views }}
+			</div> -->
+			<article
+				v-if="postHtml"
+				v-html="postHtml"
+				class="flex-grow prose font-lato text-stone-400"
+			></article>
 
 			<!-- <AppFooter /> -->
 			<ScrollTop />
@@ -19,17 +30,12 @@
 </template>
 
 <script setup>
-	// import {
-	// 	IconSave,
-	// 	IconPencil,
-	// 	IconBxPencil,
-	// } from "@iconify-prerendered/vue-bx";
 	import { generateHTML } from "@tiptap/core";
 	import StarterKit from "@tiptap/starter-kit";
 	import Image from "@tiptap/extension-image";
 	import Link from "@tiptap/extension-link";
 	import Youtube from "@tiptap/extension-youtube";
-	import movieCardTiptap from '/assets/js/MovieCardTiptap.js';
+	import movieCardTiptap from "/assets/js/MovieCardTiptap.js";
 	import { serverTimestamp } from "firebase/firestore";
 
 	definePageMeta({
@@ -41,11 +47,6 @@
 	// const post = ref(null);
 	const postHtml = ref();
 	const postTags = ref([]);
-
-	// const { data: post, pending, error, refresh } = await useAsyncData(
-	//   'post',
-	//   () => $fetch('/api/post?slug=' + route.params.slug)
-	// )
 
 	const { data: post } = await useFetch(
 		`/api/blog/?slug=${route.params.slug}`,
@@ -73,8 +74,7 @@
 			},
 			{
 				property: "og:url",
-				content:
-					"https://watchlistr.in/" + post?.value?.slug,
+				content: "https://watchlistr.in/" + post?.value?.slug,
 			},
 			{
 				name: "twitter:card",
@@ -183,8 +183,10 @@
 				Image,
 				Youtube,
 				Link,
-				movieCardTiptap
+				movieCardTiptap,
 			]);
+
+			incrementPageView("posts", post.value.id)
 		} else {
 			console.log("else");
 		}
@@ -202,6 +204,6 @@
 	}
 
 	.prose h2 {
-		color: rgb(242, 162, 2)
+		color: rgb(242, 162, 2);
 	}
 </style>

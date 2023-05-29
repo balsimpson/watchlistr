@@ -97,6 +97,12 @@ const getShowDetails = async (showId) => {
 	}
 };
 
+export const getSimilarMovies = async (id) => {
+	let url = `${BASE_URL}/movie/${id}/similar?${API_KEY}`;
+	let res = await doFetch(url);
+	console.log(res);
+};
+
 const getWatchProvider = async (type, id) => {
 	try {
 		let providers = [];
@@ -188,7 +194,7 @@ const getGenre = (genreIds) => {
 };
 
 const getGenreText = (genreIds) => {
-	console.log("ids", genreIds);
+	// console.log("ids", genreIds);
 	const genres = {
 		28: "Action",
 		12: "Adventure",
@@ -221,7 +227,7 @@ const getGenreText = (genreIds) => {
 	const genretxt = [];
 	if (genreIds && genreIds.length) {
 		genreIds.forEach((genre) => {
-			console.log(genre.id);
+			// console.log(genre.id);
 			genretxt.push(genre.name);
 		});
 	}
@@ -408,7 +414,7 @@ const getFormattedMovieDetails = async (movieId) => {
 		});
 	}
 
-	console.log("movieDetails", movieDetails);
+	// console.log("movieDetails", movieDetails);
 	// console.log('credits', credits);
 
 	let movie = {
@@ -416,6 +422,7 @@ const getFormattedMovieDetails = async (movieId) => {
 		imdb_id: movieDetails.imdb_id,
 		title: movieDetails.title,
 		poster_path: movieDetails.poster_path,
+		backdrop_path: movieDetails.poster_path,
 		overview: movieDetails.overview,
 		genres: movieDetails.genres,
 		runtime: movieDetails.runtime,

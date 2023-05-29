@@ -96,16 +96,12 @@
 		layout: "admin",
 	});
 
-	const searchTerm = ref("");
 	const errorMessage = ref("");
 	const successMessage = ref("");
-	const newList = ref([]);
 	const searchResults = ref([]);
-	const queryString = ref("");
 	const isSearching = ref(false);
 
 	const publishStatus = ref(false);
-	const publishedLink = ref("");
 
 	const searchErrorMsg = ref("");
 	const modalSeasonNumber = ref(0);
@@ -125,12 +121,12 @@
 	const doSearch = async (data) => {
 		isSearching.value = true;
 		publishStatus.value = false;
-		console.log("query", data);
+		// console.log("query", data);
 		modalSeasonNumber.value = 0;
 		try {
 			let results = await search(data.query, data.media_type);
 			// queryString.value = val;
-			console.log("results", results);
+			// console.log("results", results);
 
 			if (results && results.results) {
 				if (results.results.length > 0) {
@@ -146,7 +142,7 @@
 				isSearching.value = false;
 			} else {
 				isSearching.value = false;
-				console.log("no results", results);
+				// console.log("no results", results);
 			}
 		} catch (error) {
 			console.log("doSearch-error", error);
@@ -156,10 +152,10 @@
 	// @ts-ignore
 	const clickHandler = async (event) => {
 		searchResults.value = [];
-		console.log(event);
+		// console.log(event);
 		let res = await getFormattedMovieDetails(event.id);
 		let genres = getGenreText(res.genres);
-		console.log("res", res);
+		// console.log("res", res);
 		res.genres = genres || [];
 		selectedItem.value = res;
 	};
@@ -180,7 +176,7 @@
 
 		let docExists = await checkIfDocExists(selectedItem.value.imdb_id);
 
-		console.log("exists", docExists);
+		// console.log("exists", docExists);
 
 		if (!docExists) {
 			let result = await addDocWithId(

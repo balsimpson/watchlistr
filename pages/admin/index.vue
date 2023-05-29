@@ -3,9 +3,9 @@
 	<div class="p-6 lg:h-screen h-[calc(100vh-54px)] flex flex-col">
 		<div v-if="items">
 			<header
-				class="flex sm:items-end w-full flex-col sm:flex-row justify-between"
+				class="flex flex-col justify-between w-full sm:items-end sm:flex-row"
 			>
-				<div class="sm:pr-6 pb-6 sm:pb-0">
+				<div class="pb-6 sm:pr-6 sm:pb-0">
 					<h1 class="block text-2xl font-bold text-gray-800 sm:text-3xl">
 						Media {{ items.length }}
 					</h1>
@@ -14,7 +14,7 @@
 				<div class="sm:inline-flex gap-x-2 shrink-0">
 					<NuxtLink
 						to="/admin/add"
-						class="w-full px-12 py-3 text-center text-white bg-cyan-600 rounded-lg sm:w-auto shrink-0 flex items-center justify-center"
+						class="flex items-center justify-center w-full px-12 py-3 text-center text-white rounded-lg bg-cyan-600 sm:w-auto shrink-0"
 						><svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -30,7 +30,7 @@
 			</header>
 
 			<!-- Header -->
-			<div class="py-4 grid gap-3 md:flex md:justify-between md:items-center">
+			<div class="grid gap-3 py-4 md:flex md:justify-between md:items-center">
 				<div class="relative w-full">
 					<label class="sr-only">Search</label>
 					<input
@@ -41,7 +41,7 @@
 						v-model="searchTerm"
 					/>
 					<div
-						class="absolute inset-y-0 right-7 flex items-center pl-4 pointer-events-none"
+						class="absolute inset-y-0 flex items-center pl-4 pointer-events-none right-7"
 					>
 						<svg
 							class="h-3.5 w-3.5 text-gray-400"
@@ -63,7 +63,7 @@
 
 		<div
 			v-if="items"
-			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 overflow-y-scroll"
+			class="grid grid-cols-3 gap-3 overflow-y-scroll lg:grid-cols-4"
 		>
 			<div v-for="item in items">
 				<!-- <NuxtLink v-if="item" :to="'/' + item.media_type + '/' + item.slug"> -->
@@ -86,9 +86,13 @@
 		data: items,
 		pending,
 		error,
-	} = await useAsyncData<any[]>("items", () => $fetch("/api/post"));
+	} = await useFetch<any[]>("/api/media");
+	// const {
+	// 	data: items,
+	// 	pending,
+	// 	error,
+	// } = await useAsyncData<any[]>("items", () => $fetch("/api/media"));
 
-	
 	const searchTerm = ref("");
 	const searchItems = ref([]);
 

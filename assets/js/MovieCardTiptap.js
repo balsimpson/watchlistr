@@ -36,6 +36,9 @@ export default Node.create({
 			slug: {
 				default: "",
 			},
+			description: {
+				default: ""
+			}
 		};
 	},
 
@@ -48,34 +51,24 @@ export default Node.create({
 	},
 
 	renderHTML({ HTMLAttributes }) {
-		// return [
-		// 	"div",
-		// 	["img", mergeAttributes(HTMLAttributes, { src: HTMLAttributes.src })],
-		// 	[
-		// 		"div",
-		// 		mergeAttributes(HTMLAttributes, {
-		// 			"value": JSON.stringify(HTMLAttributes),
-		// 		}),
-		// 	],
-		// ];
-		// return ['div', ['img', mergeAttributes(HTMLAttributes, { src: HTMLAttributes.src })], ['div', mergeAttributes(HTMLAttributes, { src: HTMLAttributes.src })]]
+		
 		return [
 			"div",
 			mergeAttributes({
-				class: "flex w-full items-center gap-x-6 pt-6  border-t border-stone-600 border-dashed",
+				class: "flex w-full items-center gap-x-6 border-t border-stone-600 border-dotted h-64",
 			}),
 			// HTMLAttributes.title,
 			
 			[
 				"div",
 				mergeAttributes({
-					class: "",
+					class: "w-1/4",
 				}),
 				[
 					"img",
 					mergeAttributes({
 						src: HTMLAttributes.src,
-						class: "rounded-lg shadow-lg m-1",
+						class: "rounded-lg shadow-lg w-36",
 					}),
 				],
 			],
@@ -84,10 +77,19 @@ export default Node.create({
 				mergeAttributes({
 					class: "w-3/4",
 				}),
+				// [
+				// 	"div",
+				// 	mergeAttributes({
+				// 		class: "text-2xl font-bold",
+				// 	}),
+				// 	HTMLAttributes.title,
+				// ],
 				[
-					"div",
+					"a",
 					mergeAttributes({
-						class: "text-2xl font-bold",
+						class: "font-semibold text-2xl font-bold text-amber-300",
+						href: "/movie/" + HTMLAttributes.slug,
+						target: "_blank"
 					}),
 					HTMLAttributes.title,
 				],
@@ -96,7 +98,7 @@ export default Node.create({
 					mergeAttributes({
 						class: "text-xs italic",
 					}),
-					HTMLAttributes.release_date.split("-")[0] + ", " + HTMLAttributes.runtime,
+					HTMLAttributes.release_date.split("-")[0] + ", " + HTMLAttributes.runtime + " min",
 				],
 				[
 					"div",
@@ -105,9 +107,32 @@ export default Node.create({
 					}),
 					HTMLAttributes.genres.join(", "),
 				],
+				// [
+				// 	"p",
+				// 	mergeAttributes({
+				// 		class: "text-sm",
+				// 	}),
+				// 	HTMLAttributes.description,
+				// ],
+				[
+					"a",
+					mergeAttributes({
+						class: "text-sm font-semibold text-stone-300",
+						href: "https://www.imdb.com/title/" + HTMLAttributes.imdb_id,
+						target: "_blank"
+					}),
+					"on IMDb",
+				],
+				[
+					"button",
+					mergeAttributes({
+						class: "text-sm font-semibold text-stone-300 block",
+						onclick: `console.log(${HTMLAttributes.imdb_id})`
+					}),
+					"Add to Watchlist",
+				],
 			],
 		];
-		// return ['movie-card-tiptap', mergeAttributes(HTMLAttributes)]
 	},
 
 	addNodeView() {

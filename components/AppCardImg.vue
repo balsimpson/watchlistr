@@ -3,26 +3,27 @@
 
 	<div
 		v-if="item"
-
-		class="relative transition border border-transparent rounded-lg shadow hover:border-amber-500 h-full overflow-hidden cursor-pointer"
+		@click="navigateTo('/' + item.media_type + '/' + item.slug)"
+		class="relative h-full overflow-hidden transition border border-transparent rounded-lg shadow cursor-pointer hover:border-amber-500"
 	>
 		<div class="absolute inset-0 rounded-lg bg-gradient-to-t from-black">
-			<div class="absolute inset-x-0 bottom-5">
+			<div class="absolute inset-x-0 bottom-2">
 				<!-- <pre>{{ item }}</pre> -->
+				
+
+				<div class="flex flex-wrap justify-center gap-1 px-3 pb-2 text-xs z-60 text-stone-400">
+					<span v-for="genre in item.genres"
+						:key:string="genre"
+						class="px-2 border rounded-full border-stone-700"	
+					>{{ genre }}</span>
+				</div>
+
 				<NuxtLink
 					:to="'/' + item.media_type + '/' + item.slug"
-					class="px-2 pb-4 leading-5 text-center text-gray-200 capitalize text-xl flex justify-center hover:text-amber-500"
+					class="flex justify-center px-2 pb-4 text-xl font-bold leading-5 text-center text-gray-200 capitalize hover:text-amber-500"
 				>
 					{{ item.title }}
 				</NuxtLink>
-
-				<div class="flex flex-wrap justify-center gap-1 px-3 z-60">
-					<TypeChip
-						v-for="genre in item.genres"
-						:key:string="genre"
-						:title="genre"
-					/>
-				</div>
 			</div>
 		</div>
 

@@ -11,7 +11,8 @@ export default defineNuxtConfig({
 			FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
 			CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
 			CLOUDINARY_UPLOAD_PRESET: process.env.CLOUDINARY_UPLOAD_PRESET,
-			SENDGRID_KEY: process.env.SENDGRID_KEY
+			SENDGRID_KEY: process.env.SENDGRID_KEY,
+			ADMIN_UID: process.env.ADMIN_UID,
 		},
 		private: {
 			FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
@@ -22,6 +23,7 @@ export default defineNuxtConfig({
 			FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
 			CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
 			CLOUDINARY_UPLOAD_PRESET: process.env.CLOUDINARY_UPLOAD_PRESET,
+			ADMIN_UID: process.env.ADMIN_UID,
 			// SENDGRID_KEY: process.env.SENDGRID_KEY
 		},
 	},

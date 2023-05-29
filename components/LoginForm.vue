@@ -1,39 +1,54 @@
 <template>
 	<div
-		class="flex flex-col justify-center items-center bg-white h-full sm:h-auto md:rounded-lg sm:flex-row overflow-hidden"
+		class="flex flex-col items-center justify-center h-full overflow-hidden sm:h-auto md:rounded-lg sm:flex-row bg-stone-900"
 	>
 		<div
-			class="flex items-start justify-center w-full rounded-lg bg-zinc-500 sm:w-1/2 bg-gradient-to-bl from-stone-800 to-stone-600"
+			class="flex items-center justify-center w-full px-8 pt-12 text-center rounded-lg sm:w-1/2 text-stone-300"
 		>
-			<img
+			<!-- <img
 				src="https://source.unsplash.com/random?beach"
 				alt=""
 				class="object-cover h-64 sm:w-full md:rounded-lg sm:h-full"
-			/>
+			/> -->
+			<div class="flex flex-col items-center justify-center pb-12">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 15 15"
+					class="w-24 h-24"
+				>
+					<path
+						fill="currentColor"
+						d="M2.5 1A1.5 1.5 0 0 0 1 2.5V10a4 4 0 0 0 4 4v-1a3 3 0 0 1-3-3V7h3.5A1.5 1.5 0 0 0 7 5.5v-3A1.5 1.5 0 0 0 5.5 1h-3Zm7 0A1.5 1.5 0 0 0 8 2.5V10a4 4 0 0 0 4 4v-1a3 3 0 0 1-3-3V7h3.5A1.5 1.5 0 0 0 14 5.5v-3A1.5 1.5 0 0 0 12.5 1h-3Z"
+					/>
+				</svg>
+				<div class="pt-6">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt
+				maxime aperiam asperiores adipisci beatae vel assumenda at? Quasi, quia
+				ad.</div>
+			</div>
 		</div>
 
-		<div class="w-full pt-4 sm:p-8 sm:w-1/2 sm:pt-0 p-6">
+		<div class="w-full p-6 sm:p-8 sm:w-1/2 bg-stone-800">
 			<div class="rounded-b md:rounded-r md:rounded-l-none">
 				<!-- register title -->
 				<div v-if="isRegistering" class="mb-4">
-					<div class="text-3xl font-extrabold text-zinc-500">Register.</div>
-					<div class="leading-4 text-gray-400 font-base text-md">
+					<div class="text-3xl font-extrabold text-teal-500">Register.</div>
+					<!-- <div class="leading-4 text-gray-400 font-base text-md">
 						Create custom lists, save your favourites and more.
-					</div>
+					</div> -->
 				</div>
 				<!-- sign in title -->
 				<div v-else class="mb-4">
-					<div class="text-3xl font-extrabold text-zinc-400">Sign in.</div>
-					<div class="leading-4 text-gray-500 font-base text-md">
+					<div class="text-3xl font-extrabold text-zinc-300">Sign in.</div>
+					<!-- <div class="leading-4 text-gray-500 font-base text-md">
 						Create custom lists, save your favourites and more.
-					</div>
+					</div> -->
 				</div>
 			</div>
-			<form v-if="!isRegistering" @submit="login" class="space-y-4">
+			<form v-if="!isRegistering" @submit="login" class="space-y-4 text-gray-400">
 				<div>
 					<label
 						for="email"
-						class="block text-sm font-medium text-left text-gray-500"
+						class="block text-sm font-medium text-left "
 					>
 						<div
 							v-if="isInvalidEmail"
@@ -52,7 +67,7 @@
 							autocomplete="email"
 							required="true"
 							placeholder="Your Email"
-							class="py-2 px-3 border w-full rounded"
+							class="w-full px-3 py-2 border rounded bg-stone-900 border-stone-700 text-stone-300 focus-within:outline-none focus-within:ring-1 focus-within:ring-amber-500 placeholder-stone-600"
 							:class="[isInvalidEmail || loginErrorMsg ? 'bg-amber-400' : '']"
 						/>
 					</div>
@@ -60,7 +75,7 @@
 				<div class="space-y-1">
 					<label
 						for="password"
-						class="block text-sm font-medium text-left text-gray-500"
+						class="block text-sm font-medium text-left"
 					>
 						Password
 					</label>
@@ -73,7 +88,7 @@
 							autocomplete="current-password"
 							required="true"
 							placeholder="Your Password"
-							class="py-2 px-3 border w-full rounded"
+							class="w-full px-3 py-2 border rounded bg-stone-900 border-stone-700 text-stone-300 focus-within:outline-none focus-within:ring-1 focus-within:ring-amber-500 placeholder-stone-600"
 						/>
 					</div>
 				</div>
@@ -84,8 +99,9 @@
 					</div>
 					<button
 						@click.prevent="login"
-						class="flex items-center justify-center"
+						class="flex items-center justify-center w-full py-2 font-semibold text-black rounded bg-amber-500"
 						:disabled="isSigninActive"
+						:class="[isSigninActive ? 'opacity-50 pointer-events-none' : '']"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -115,11 +131,11 @@
 				</div>
 			</form>
 
-			<form v-else @submit="register" class="space-y-4">
+			<form v-else @submit="register" class="space-y-4 text-gray-400">
 				<div>
 					<label
 						for="name"
-						class="block text-sm font-medium text-left text-gray-500"
+						class="block text-sm font-medium text-left "
 					>
 						Display Name
 					</label>
@@ -131,7 +147,7 @@
 							type="text"
 							required="true"
 							placeholder="Your Display Name"
-							class="py-4 input-text"
+							class="w-full px-3 py-2 border rounded bg-stone-900 border-stone-700 text-stone-300 focus-within:outline-none focus-within:ring-1 focus-within:ring-amber-500 placeholder-stone-600"
 							:class="[
 								loginErrorMsg == 'Display name required'
 									? 'border-red-500'
@@ -143,7 +159,7 @@
 				<div>
 					<label
 						for="email"
-						class="block text-sm font-medium text-left text-gray-500"
+						class="block text-sm font-medium text-left"
 					>
 						<div
 							v-if="isInvalidEmail"
@@ -162,7 +178,7 @@
 							autocomplete="email"
 							required="true"
 							placeholder="Your Email"
-							class="py-4 input-text"
+							class="w-full px-3 py-2 border rounded bg-stone-900 border-stone-700 text-stone-300 focus-within:outline-none focus-within:ring-1 focus-within:ring-amber-500 placeholder-stone-600"
 							:class="[isInvalidEmail || loginErrorMsg ? 'bg-amber-200' : '']"
 						/>
 					</div>
@@ -170,7 +186,7 @@
 				<div class="space-y-1">
 					<label
 						for="password"
-						class="block text-sm font-medium text-left text-gray-500"
+						class="block text-sm font-medium text-left "
 					>
 						Password
 					</label>
@@ -183,7 +199,7 @@
 							autocomplete="current-password"
 							required="true"
 							placeholder="Your Password"
-							class="py-4 input-text"
+							class="w-full px-3 py-2 border rounded bg-stone-900 border-stone-700 text-stone-300 focus-within:outline-none focus-within:ring-1 focus-within:ring-amber-500 placeholder-stone-600"
 						/>
 					</div>
 				</div>
@@ -194,8 +210,9 @@
 					</div>
 					<button
 						@click.prevent="register"
-						class="mt-3 btn-login"
+						class="flex items-center justify-center w-full py-2 font-semibold text-black rounded bg-amber-500"
 						:disabled="isSigninActive"
+						:class="[isSigninActive ? 'opacity-50 pointer-events-none' : '']"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -228,11 +245,11 @@
 			<div class="relative my-4 mt-6">
 				<div class="absolute inset-0 flex items-center">
 					<div
-						class="w-full border-t border-gray-400 dark:border-gray-600"
+						class="w-full border-t border-gray-700"
 					></div>
 				</div>
 				<div class="relative flex justify-center text-sm">
-					<span class="px-2 text-gray-500 bg-white"> or </span>
+					<span class="px-2 text-gray-500 bg-stone-800"> or </span>
 				</div>
 			</div>
 
@@ -273,33 +290,6 @@
 					<span
 						class="px-3 text-base font-semibold text-gray-600 transition dark:text-gray-500 group-hover:text-gray-300"
 						>Sign In with Google</span
-					>
-				</div>
-
-				<div
-					class="transition flex items-center bg-gray-300 dark:bg-gray-200 hover:bg-[#1da1f2] dark:hover:bg-[#1da1f2] rounded-lg hover:shadow-lg group cursor-pointer hover:text-white m-2"
-					@click="socialSignInHandler('twitter')"
-				>
-					<div class="bg-white rounded-l-lg">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 333333 333333"
-							class="w-6 h-6 m-2"
-							shape-rendering="geometricPrecision"
-							text-rendering="geometricPrecision"
-							image-rendering="optimizeQuality"
-							fill-rule="evenodd"
-							clip-rule="evenodd"
-						>
-							<path
-								d="M333328 63295c-12254 5480-25456 9122-39241 10745 14123-8458 24924-21861 30080-37819-13200 7807-27871 13533-43416 16596-12499-13281-30252-21537-49919-21537-37762 0-68336 30591-68336 68330 0 5326 591 10537 1748 15562-56820-2880-107194-30081-140915-71467-6049 10435-9250 22300-9250 34367v8c0 23696 12031 44654 30389 56876-11202-333-21739-3457-30991-8519v854c0 33138 23554 60789 54852 67039-5734 1557-11787 2417-18023 2417-4417 0-8673-455-12905-1224 8742 27139 33975 46923 63857 47500-23430 18356-52858 29286-84939 29286-5537 0-10931-339-16318-984 30326 19458 66251 30727 104844 30727 125735 0 194551-104198 194551-194543 0-3002-67-5911-191-8852 13354-9553 24932-21609 34097-35333l31-31-6 4z"
-								fill="#1da1f2"
-							/>
-						</svg>
-					</div>
-					<span
-						class="px-3 text-base font-semibold text-gray-600 transition dark:text-gray-500 group-hover:text-zinc-200"
-						>Sign In with Twitter</span
 					>
 				</div>
 
@@ -386,7 +376,7 @@
 </template>
 
 <script setup>
-
+const emit = defineEmits(["login"])
 	const inputEmail = ref("");
 	const inputPassword = ref("");
 	const displayNameInput = ref("");
@@ -411,7 +401,7 @@
 	});
 
 	const processErrorMsg = (error) => {
-		// console.log('process-error', typeof error, JSON.stringify(error))
+		console.log('process-error', typeof error, JSON.stringify(error))
 		let errorMsg = "";
 		if (error.code == "auth/user-not-found") {
 			errorMsg = "User not found. Please register.";
@@ -422,7 +412,7 @@
 		} else if (error.code === "auth/email-already-in-use") {
 			errorMsg = "Email already in use";
 		} else {
-			// errorMsg = error.message
+			errorMsg = error.message
 		}
 
 		console.log("login-error-msg", errorMsg);
@@ -435,14 +425,14 @@
 		if (!isInvalidEmail.value) {
 			// console.log("email invalid", isInvalidEmail.value);
 			try {
-				let res = await signIn(inputEmail.value, inputPassword.value);
+				let res = await signInUser(inputEmail.value, inputPassword.value);
 
 				if (res.user) {
 					emit("login", res.user);
 					// console.log('login success', res)
 				} else {
 					console.log("login fail", res);
-					loginErrorMsg.value = processErrorMsg(res);
+					loginErrorMsg.value = res;
 					setTimeout(() => {
 						loginErrorMsg.value = "";
 					}, 3000);
@@ -452,7 +442,7 @@
 				// emit("login", res);
 				return res;
 			} catch (error) {
-				console.log("error", error);
+				// console.log("error", error);
 				processErrorMsg(error);
 			}
 		} else {
@@ -503,7 +493,8 @@
 		let res = await socialSignIn(signinProvider);
 
 		if (res && res.user) {
-			emit("login", res.user);
+			// emit("login", res.user);
+			console.log(res.user)
 		} else {
 			if (res && res.message) {
 				loginErrorMsg.value = processErrorMsg(res);
