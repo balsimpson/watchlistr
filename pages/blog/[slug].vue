@@ -4,8 +4,7 @@
 			v-if="post && post.title"
 			class="flex flex-col h-full max-w-3xl p-5 mx-auto text-stone-300"
 		>
-
-		<!-- <pre>{{ post }}</pre> -->
+			<!-- <pre>{{ post }}</pre> -->
 			<h1
 				class="text-3xl font-bold leading-none tracking-tighter sm:text-5xl sm:text-left md:text-6xl"
 			>
@@ -186,7 +185,7 @@
 				movieCardTiptap,
 			]);
 
-			incrementPageView("posts", post.value.id)
+			incrementPageView("posts", post.value.id);
 		} else {
 			console.log("else");
 		}

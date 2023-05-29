@@ -1,6 +1,6 @@
 <template>
-	<div class="max-w-2xl p-4 h-full flex flex-col mx-auto">
-		<div class="grow overflow-y-scroll">
+	<div class="flex flex-col h-full max-w-2xl p-4 mx-auto">
+		<div class="overflow-y-scroll grow">
 			<p>Search</p>
 
 			<SearchWithDropdown
@@ -20,12 +20,12 @@
 			<!-- <pre>{{ selectedItem }}</pre> -->
 			<div
 				v-if="selectedItem"
-				class="flex flex-wrap items-center max-w-5xl mx-auto sm:mt-12 mt-3"
+				class="flex flex-wrap items-center max-w-5xl mx-auto mt-3 sm:mt-12"
 			>
-				<div class="grid gap-12 sm:grid-cols-2 text-gray-700">
+				<div class="grid gap-12 text-gray-700 sm:grid-cols-2">
 					<div class="relative">
 						<img
-							class="object-cover object-center w-full sm:h-auto h-96 mx-auto rounded-lg"
+							class="object-cover object-center w-full mx-auto rounded-lg sm:h-auto h-96"
 							:alt="selectedItem.title"
 							:src="getImageURL(selectedItem.poster_path)"
 						/>
@@ -38,7 +38,7 @@
 						</h1>
 
 						<p
-							class="mt-2 mb-4 text-sm leading-6 text-center text-gray-700 sm:text-left pt-6"
+							class="pt-6 mt-2 mb-4 text-sm leading-6 text-center text-gray-700 sm:text-left"
 						>
 							{{ selectedItem.overview }}
 						</p>
@@ -50,7 +50,7 @@
 						/>
 
 						<textarea
-							class="border rounded-md w-full p-3"
+							class="w-full p-3 border rounded-md"
 							rows="5"
 							v-model="itemComment"
 							placeholder="Your comments"
@@ -64,18 +64,18 @@
 				v-if="errorMessage"
 				class="flex bg-black/[.05] justify-center w-full px-3 py-2 border border-red-500/50 rounded-full shadow-md max-w-md mx-auto mb-2"
 			>
-				<div class="text-center text-red-500 text-sm">
+				<div class="text-sm text-center text-red-500">
 					{{ errorMessage }}
 				</div>
 			</div>
 			<div v-if="successMessage" class="flex bg-black/[.05] justify-center w-full px-3 py-2 border border-green-500/50 rounded-full shadow-md max-w-md mx-auto mb-2">
-      <div class="text-center text-green-500 text-sm">
+      <div class="text-sm text-center text-green-500">
         {{ successMessage }}
       </div>
     </div>
 			<div
 				v-if="selectedItem"
-				class="flex justify-between items-center gap-x-6"
+				class="flex items-center justify-between gap-x-6"
 			>
 				<NuxtLink to="/admin">Cancel</NuxtLink>
 				<button
@@ -174,7 +174,7 @@
 			...selectedItem.value,
 		};
 
-		let docExists = await checkIfDocExists(selectedItem.value.imdb_id);
+		let docExists = await checkIfDocExists("media", selectedItem.value.imdb_id);
 
 		// console.log("exists", docExists);
 
@@ -185,6 +185,7 @@
 				selectedItem.value.imdb_id
 			);
 			// console.log("result", result);
+			selectedItem.value = ""
 			successMessage.value = "Successfully added.";
 
 			setTimeout(() => {

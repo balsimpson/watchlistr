@@ -483,7 +483,7 @@
 
 		if (res && res.user) {
 			emit("login", res.user);
-			console.log(res.user);
+			// console.log(res.user);
 		} else {
 			if (res && res.message) {
 				loginErrorMsg.value = processErrorMsg(res);

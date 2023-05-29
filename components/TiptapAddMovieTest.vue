@@ -834,42 +834,36 @@
 	const addMovie = async () => {
 		// get movie details
 		
-		console.log(movies.value);
+		// console.log(movies.value);
 		const searchByTitle = fuzzy(movies.value, "title");
 		
 		let result = searchByTitle(movieSlug.value)[0]
 		console.log("result", result);
 
-
-		// const result = {
-		// 	title: "Diabolique",
-		// 	poster_path: "/pNcwhz3Eyfn3KQ2XykTozbARMpr.jpg",
-		// 	slug: "diabolique-1955",
-		// 	release_date: "1955-01-29",
-		// 	overview:
-		// 		"The cruel and abusive headmaster of a boarding school, Michel Delassalle, is murdered by an unlikely duo -- his meek wife and the mistress he brazenly flaunts. The women become increasingly unhinged by a series of odd occurrences after Delassalle's corpse mysteriously disappears.",
-		// };
-		// // insert HTML
-		editor.value
-			.chain()
-			.focus()
-			.insertContent({
-				type: "movieCardTiptap",
-				attrs: {
-					title: result.title,
-					src: getImageURL(result.poster_path),
-					genres: result.genres,
-					imdb_id: result.imdb_id,
-					release_date: result.release_date,
-					spoken_languages: result.spoken_languages,
-					runtime: result.runtime,
-					slug: result.slug,
-				},
-			})
-			.run();
-
-		movieSlug.value = "";
-		showAddMovie.value = !showAddMovie;
+		if (result.title) {
+			// // insert HTML
+			editor.value
+				.chain()
+				.focus()
+				.insertContent({
+					type: "movieCardTiptap",
+					attrs: {
+						title: result.title,
+						src: getImageURL(result.poster_path),
+						genres: result.genres,
+						overview: result.overview,
+						imdb_id: result.imdb_id,
+						release_date: result.release_date,
+						spoken_languages: result.spoken_languages,
+						runtime: result.runtime,
+						slug: result.slug,
+					},
+				})
+				.run();
+	
+			movieSlug.value = "";
+			showAddMovie.value = !showAddMovie;
+		}
 	};
 
 	// add YouTube video
