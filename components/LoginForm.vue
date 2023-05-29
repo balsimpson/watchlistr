@@ -21,9 +21,11 @@
 						d="M2.5 1A1.5 1.5 0 0 0 1 2.5V10a4 4 0 0 0 4 4v-1a3 3 0 0 1-3-3V7h3.5A1.5 1.5 0 0 0 7 5.5v-3A1.5 1.5 0 0 0 5.5 1h-3Zm7 0A1.5 1.5 0 0 0 8 2.5V10a4 4 0 0 0 4 4v-1a3 3 0 0 1-3-3V7h3.5A1.5 1.5 0 0 0 14 5.5v-3A1.5 1.5 0 0 0 12.5 1h-3Z"
 					/>
 				</svg>
-				<div class="pt-6">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt
-				maxime aperiam asperiores adipisci beatae vel assumenda at? Quasi, quia
-				ad.</div>
+				<div class="pt-6">
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt
+					maxime aperiam asperiores adipisci beatae vel assumenda at? Quasi,
+					quia ad.
+				</div>
 			</div>
 		</div>
 
@@ -44,12 +46,13 @@
 					</div> -->
 				</div>
 			</div>
-			<form v-if="!isRegistering" @submit="login" class="space-y-4 text-gray-400">
+			<form
+				v-if="!isRegistering"
+				@submit="login"
+				class="space-y-4 text-gray-400"
+			>
 				<div>
-					<label
-						for="email"
-						class="block text-sm font-medium text-left "
-					>
+					<label for="email" class="block text-sm font-medium text-left">
 						<div
 							v-if="isInvalidEmail"
 							class="h-4 text-sm text-left text-amber-400"
@@ -73,10 +76,7 @@
 					</div>
 				</div>
 				<div class="space-y-1">
-					<label
-						for="password"
-						class="block text-sm font-medium text-left"
-					>
+					<label for="password" class="block text-sm font-medium text-left">
 						Password
 					</label>
 					<div class="mt-1">
@@ -133,10 +133,7 @@
 
 			<form v-else @submit="register" class="space-y-4 text-gray-400">
 				<div>
-					<label
-						for="name"
-						class="block text-sm font-medium text-left "
-					>
+					<label for="name" class="block text-sm font-medium text-left">
 						Display Name
 					</label>
 					<div class="mt-1">
@@ -157,10 +154,7 @@
 					</div>
 				</div>
 				<div>
-					<label
-						for="email"
-						class="block text-sm font-medium text-left"
-					>
+					<label for="email" class="block text-sm font-medium text-left">
 						<div
 							v-if="isInvalidEmail"
 							class="h-4 text-sm text-left text-amber-400"
@@ -184,10 +178,7 @@
 					</div>
 				</div>
 				<div class="space-y-1">
-					<label
-						for="password"
-						class="block text-sm font-medium text-left "
-					>
+					<label for="password" class="block text-sm font-medium text-left">
 						Password
 					</label>
 					<div class="mt-1">
@@ -244,9 +235,7 @@
 
 			<div class="relative my-4 mt-6">
 				<div class="absolute inset-0 flex items-center">
-					<div
-						class="w-full border-t border-gray-700"
-					></div>
+					<div class="w-full border-t border-gray-700"></div>
 				</div>
 				<div class="relative flex justify-center text-sm">
 					<span class="px-2 text-gray-500 bg-stone-800"> or </span>
@@ -376,7 +365,7 @@
 </template>
 
 <script setup>
-const emit = defineEmits(["login"])
+	const emit = defineEmits(["login"]);
 	const inputEmail = ref("");
 	const inputPassword = ref("");
 	const displayNameInput = ref("");
@@ -401,7 +390,7 @@ const emit = defineEmits(["login"])
 	});
 
 	const processErrorMsg = (error) => {
-		console.log('process-error', typeof error, JSON.stringify(error))
+		console.log("process-error", typeof error, JSON.stringify(error));
 		let errorMsg = "";
 		if (error.code == "auth/user-not-found") {
 			errorMsg = "User not found. Please register.";
@@ -412,7 +401,7 @@ const emit = defineEmits(["login"])
 		} else if (error.code === "auth/email-already-in-use") {
 			errorMsg = "Email already in use";
 		} else {
-			errorMsg = error.message
+			errorMsg = error.message;
 		}
 
 		console.log("login-error-msg", errorMsg);
@@ -429,7 +418,7 @@ const emit = defineEmits(["login"])
 
 				if (res.user) {
 					emit("login", res.user);
-					// console.log('login success', res)
+					console.log('login success', res)
 				} else {
 					console.log("login fail", res);
 					loginErrorMsg.value = res;
@@ -493,8 +482,8 @@ const emit = defineEmits(["login"])
 		let res = await socialSignIn(signinProvider);
 
 		if (res && res.user) {
-			// emit("login", res.user);
-			console.log(res.user)
+			emit("login", res.user);
+			console.log(res.user);
 		} else {
 			if (res && res.message) {
 				loginErrorMsg.value = processErrorMsg(res);

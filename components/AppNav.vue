@@ -136,7 +136,7 @@
 			@close="isModalActive = !isModalActive"
 			class="flex items-center"
 		>
-			<LoginForm />
+			<LoginForm @login="signIn"/>
 		</AppModalAnimated>
 	</div>
 </template>
@@ -152,10 +152,16 @@
 	const isActive = ref(false);
 	const isModalActive = ref(false);
 	
+	const signIn = () => {
+		console.log("signedin");
+		isModalActive.value = false;
+		addToWatchlistBtnHandler()
+	}
+	
 	const signOut = async () => {
 		// console.log("signing out");
 		await signOutUser();
-		router.push("/");
+		// router.push("/");
 	};
 </script>
 

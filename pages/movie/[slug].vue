@@ -200,8 +200,8 @@
 
 	const signIn = () => {
 		console.log("signedin");
-		isModalActive.value = !isModalActive.value;
-		addToWatchlistBtnHandler()
+		isModalActive.value = false;
+		// addToWatchlistBtnHandler()
 	}
 
 	const addToWatchlistBtnHandler = async () => {
