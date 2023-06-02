@@ -80,9 +80,9 @@
 <script setup>
 // import { IconSearch } from "@iconify-prerendered/vue-bx";
 
-definePageMeta({
-  layout: false
-})
+// definePageMeta({
+//   layout: false
+// })
 
 useHead({
   title: "Film Fight",

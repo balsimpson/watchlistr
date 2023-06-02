@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="flex flex-col items-center justify-center h-full overflow-hidden sm:h-auto md:rounded-lg sm:flex-row bg-stone-900"
+		class="flex flex-col items-center justify-center h-full overflow-y-scroll sm:h-auto md:rounded-lg sm:flex-row bg-stone-900"
 	>
 		<div
 			class="flex items-center justify-center w-full px-8 pt-12 text-center rounded-lg sm:w-1/2 text-stone-300"
@@ -21,10 +21,8 @@
 						d="M2.5 1A1.5 1.5 0 0 0 1 2.5V10a4 4 0 0 0 4 4v-1a3 3 0 0 1-3-3V7h3.5A1.5 1.5 0 0 0 7 5.5v-3A1.5 1.5 0 0 0 5.5 1h-3Zm7 0A1.5 1.5 0 0 0 8 2.5V10a4 4 0 0 0 4 4v-1a3 3 0 0 1-3-3V7h3.5A1.5 1.5 0 0 0 14 5.5v-3A1.5 1.5 0 0 0 12.5 1h-3Z"
 					/>
 				</svg>
-				<div class="pt-6">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt
-					maxime aperiam asperiores adipisci beatae vel assumenda at? Quasi,
-					quia ad.
+				<div class="pt-6 font-arvo">
+					{{ quote[1] }}
 				</div>
 			</div>
 		</div>
@@ -365,6 +363,15 @@
 </template>
 
 <script setup>
+	const quote = [
+		"You’ve got an overdeveloped sense of vengeance. It’s going to get you into trouble one of these days.",
+
+		"We met at Starbucks. Not the same Starbucks, she was in the Starbucks across the street from the Starbucks I was in.",
+
+		"Are you crazy? You fed a baby chili?",
+
+		"Want a beer? \nIt’s eight o’clock in the morning…",
+	];
 	const emit = defineEmits(["login"]);
 	const inputEmail = ref("");
 	const inputPassword = ref("");
@@ -418,7 +425,7 @@
 
 				if (res.user) {
 					emit("login", res.user);
-					console.log('login success', res)
+					console.log("login success", res);
 				} else {
 					console.log("login fail", res);
 					loginErrorMsg.value = res;
@@ -456,9 +463,8 @@
 			);
 
 			if (res.user) {
-				// console.log('res', res)
+				console.log("res", res);
 				emit("login", res.user);
-				store.commit("setUserName", displayNameInput.value);
 			} else {
 				if (res && res.message) {
 					loginErrorMsg.value = processErrorMsg(res);

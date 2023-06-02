@@ -174,11 +174,21 @@
 			...selectedItem.value,
 		};
 
-		let docExists = await checkIfDocExists("media", selectedItem.value.imdb_id);
+		let docExists = await checkIfDocExists(selectedItem.value.imdb_id, "media");
 
 		// console.log("exists", docExists);
 
-		if (!docExists) {
+		if (docExists) {
+
+			// console.log("no");
+			errorMessage.value = "Duplicate! Item already added.";
+
+			setTimeout(() => {
+				errorMessage.value = "";
+			}, 5000);
+
+			
+		} else {
 			let result = await addDocWithId(
 				"media",
 				data,
@@ -191,13 +201,7 @@
 			setTimeout(() => {
 				successMessage.value = "";
 			}, 5000);
-		} else {
-			console.log("no");
-			errorMessage.value = "Duplicate! Item already added.";
-
-			setTimeout(() => {
-				errorMessage.value = "";
-			}, 5000);
+			
 		}
 
 		addBtnTxt.value = "add to list";

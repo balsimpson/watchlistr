@@ -4,6 +4,8 @@ import {
 	onAuthStateChanged,
 	GoogleAuthProvider,
 	signInWithPopup,
+	createUserWithEmailAndPassword,
+	updateProfile,
 } from "firebase/auth";
 import {
 	addDoc,
@@ -21,7 +23,7 @@ import {
 	Query,
 	increment,
 	deleteDoc,
-	updateDoc
+	updateDoc,
 } from "firebase/firestore";
 
 export const signInUser = async (email: string, password: string) => {
@@ -87,6 +89,53 @@ export const socialSignIn = async (signinProvider: string) => {
 	}
 };
 
+export const createUser = async (
+	email: string,
+	password: string,
+	displayName: string
+) => {
+	const auth = getAuth();
+	const credentials = await createUserWithEmailAndPassword(
+		auth,
+		email,
+		password
+	).catch((error) => {
+		const errorCode = error.code;
+		const errorMessage = error.message;
+	});
+
+	// @ts-ignore
+	if (credentials.user) {
+		// @ts-ignore
+		let res = await updateProfile(auth.currentUser, {
+			displayName,
+			photoURL: "",
+		});
+	}
+	return credentials;
+};
+
+/**
+ * update user profile
+ * @param {string} displayName - display name to update
+ * @param {string} photoURL - display picture to update
+ * @example updateUserProfile("name", "someurl")
+ */
+export const updateUserProfile = async (
+	displayName: string,
+	photoURL: string
+) => {
+	try {
+		const auth = getAuth();
+		// @ts-ignore
+		let res = await updateProfile(auth.currentUser, { displayName, photoURL });
+		return res;
+	} catch (error) {
+		console.log("updateUserProfile-error", error);
+		return error;
+	}
+};
+
 /**
  * Get a single document from a collection where slug
  * @param {String} collectionName - collection name
@@ -137,9 +186,9 @@ export const getDocFromFirestoreWithSlug = async (
 		let item: DocumentData;
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			// console.log(doc.id, " => ", doc.data());
+			console.log(doc.id);
 			item = doc.data();
-			item.id = doc.id;
+			// item.uid = doc.id;
 		});
 
 		// @ts-ignore
@@ -184,19 +233,23 @@ export const getDocsMatchingTag = async (
  * Get a single document from a collection where genre matches
  * @param {String} collectionName - collection name
  * @param {String} genre - genre name
- * @example getDocsMatchingGenre('media', 'mystery')
+ * @param {String} order - order by
+ * @param {Number} count - limit number of docs
+ * @example getDocsMatchingGenre('media', 'mystery', 'created_at)
  */
 export const getDocsMatchingGenre = async (
 	collectionName: string,
 	genre: string,
-	order: string
+	order: string,
+	count: number,
 ) => {
 	try {
 		const db = getFirestore();
 		const q = query(
 			collection(db, collectionName),
 			where("genres", "array-contains", genre),
-			orderBy(order, "desc")
+			orderBy(order, "desc"),
+			limit(count)
 		);
 		const querySnapshot = await getDocs(q);
 		let items: DocumentData[] = [];
@@ -290,7 +343,7 @@ export const initUser = async () => {
 
 	const router = useRouter();
 
-	onAuthStateChanged (auth, async (user) => {
+	onAuthStateChanged(auth, async (user) => {
 		if (user) {
 			// User is signed in, see docs for a list of available properties
 			// console.log("user signed in")
@@ -449,10 +502,37 @@ export const checkIfDocExists = async (
 	let docRef = doc(db, collectionName, docId);
 	// @ts-ignore
 	let res = await getDoc(docRef);
-	// console.log("res", res)
-	return res.data();
+	console.log("res", res.data(), collectionName, docId);
+
+	if (res.data()) {
+		return true;
+	}
+	return false;
 };
 
+/**
+ * Delete a document in a subcollection
+ * @param  {string} collectionName - the name of the collection
+ * @param  {string} subcollectionName - the name of the subcollection
+ * @param  {string} docId - document id
+ */
+export const deleteDocFromSubcollection = async (
+	collectionName: string,
+	subcollectionName: string,
+	docId: string
+) => {
+	try {
+		const db = getFirestore();
+		// const docRef = doc(db, collectionName, docId);
+		const docRef = doc(db, `${collectionName}/${subcollectionName}`, docId);
+		// const docRef = doc(db, `${collectionName}/${docId}/${subcollectionName}`);
+		let res = await deleteDoc(docRef);
+		return res;
+	} catch (error) {
+		console.log("deleteDocFromSubcollection-error", error);
+		return error;
+	}
+};
 /**
  * Delete a document in a collection
  * @param  {string} collectionName - the name of the collection
@@ -473,12 +553,15 @@ export const deleteDocFromFirestore = async (
 	}
 };
 
-export const incrementPageView = async (collectionName: string, uid: string) => {
+export const incrementPageView = async (
+	collectionName: string,
+	uid: string
+) => {
 	const db = getFirestore();
-  
+
 	// @ts-ignore
 	const docRef = doc(db, collectionName, uid);
-	let res = await updateDoc(docRef, { views: increment(1) })
+	let res = await updateDoc(docRef, { views: increment(1) });
 	// console.log(res);
-	return res
-  }
+	return res;
+};

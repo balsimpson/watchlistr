@@ -23,7 +23,7 @@
 							? 'bg-teal-600 text-teal-800 pointer-events-none'
 							: '',
 						addToWatchlistBtnTxt == 'Remove from Watchlist'
-							? 'bg-amber-400 text-stone-800 pointer-events-none'
+							? 'bg-amber-400 text-stone-800'
 							: '',
 					]"
 				>
@@ -125,25 +125,36 @@
 
 		<!-- <CarouselMovieCard :id="post.id" /> -->
 
+		<div class="flex flex-col py-12 sm:px-6">
+			<p class="mt-2 text-3xl font-bold tracking-tight text-gray-300 sm:text-4xl">
+				You may also like
+			</p>
+			
+			<AppCarousel :items="similar_movies"/>
+		</div>
+
+		<!-- {{ similar_movies }} -->
+
 		<AppModalAnimated
 			:isActive="isModalActive"
 			@close="isModalActive = !isModalActive"
 			class="flex items-center"
 		>
-			<LoginForm @login="signIn"/>
+			<LoginForm @login="signIn" />
 		</AppModalAnimated>
 	</div>
 </template>
 
 <script setup>
+	definePageMeta({
+		layout: "default",
+	});
 	const firebaseUser = useFirebaseUser();
 	const firebaseItems = useFirebaseItems();
 	const route = useRoute();
 	const isModalActive = ref(false);
 	const isInWatchlist = ref(false);
 
-	
-	
 	const addToWatchlistBtnTxt = ref("Add to Watchlist");
 	const { data: post } = await useFetch(
 		`/api/media/?slug=${route.params.slug}`,
@@ -196,55 +207,80 @@
 		],
 	});
 
-	
-
 	const signIn = () => {
 		console.log("signedin");
 		isModalActive.value = false;
 		// addToWatchlistBtnHandler()
-	}
+	};
 
 	const addToWatchlistBtnHandler = async () => {
 		// console.log("firebaseUser", firebaseUser);
-		if (!firebaseUser.value) {
-			isModalActive.value = !isModalActive.value;
-		} else {
-			// add to list on user db
-			addToWatchlistBtnTxt.value = "Adding...";
-			// addToWatchlistBtnTxt.value = "Added!"
-			// addToWatchlistBtnTxt.value = "Remove from Watchlist"
-			let docExists = await checkIfDocExists(firebaseUser.value.uid, "users");
-
-			// console.log(docExists);
-
-			// let result = await addDocWithId(
-			// 	"users",
-			// 	firebaseUser,
-			// 	firebaseUser.value.uid
-			// );
-
-			let result = await addDocToSubcollection(
-				"users",
-				firebaseUser.value.uid,
+		if (addToWatchlistBtnTxt.value == "Remove from Watchlist") {
+			// console.log("user", post.value, firebaseItems.value[0]);
+			addToWatchlistBtnTxt.value = "Removing...";
+			// remove doc from watchlist
+			let res = await deleteDocFromSubcollection(
+				"users/" + firebaseUser.value.uid,
 				"watchlist",
-				post.value
+				post.value.uid
 			);
 
-			addToWatchlistBtnTxt.value = "Added!";
-			setTimeout(() => {
-				addToWatchlistBtnTxt.value = "Remove from Watchlist";
-			}, 5000);
+			console.log("res", res);
 
-			firebaseItems.value.unshift(post.value)
-			checkIfInWatchlist()
-			// console.log(result);
+			addToWatchlistBtnTxt.value = "Removed!";
+			setTimeout(() => {
+				addToWatchlistBtnTxt.value = "Add to Watchlist";
+			}, 1000);
+
+			let items = firebaseItems.value.filter((item) => {
+				// console.log(item);
+				item.id !== post.value.id;
+			});
+			firebaseItems.value = items;
+		} else {
+			if (!firebaseUser.value) {
+				isModalActive.value = !isModalActive.value;
+			} else {
+				// add to list on user db
+				addToWatchlistBtnTxt.value = "Adding...";
+				// addToWatchlistBtnTxt.value = "Added!"
+				// addToWatchlistBtnTxt.value = "Remove from Watchlist"
+				let docExists = await checkIfDocExists(firebaseUser.value.uid, "users");
+
+				// console.log(docExists);
+
+				// let result = await addDocWithId(
+				// 	"users",
+				// 	firebaseUser,
+				// 	firebaseUser.value.uid
+				// );
+
+				let result = await addDocToSubcollection(
+					"users",
+					firebaseUser.value.uid,
+					"watchlist",
+					post.value
+				);
+
+				addToWatchlistBtnTxt.value = "Added!";
+				setTimeout(() => {
+					addToWatchlistBtnTxt.value = "Remove from Watchlist";
+				}, 5000);
+
+				firebaseItems.value.unshift(post.value);
+				checkIfInWatchlist();
+				// console.log(result);
+			}
 		}
 	};
 
 	const checkIfInWatchlist = () => {
 		let items = firebaseItems.value.filter((item) => {
 			// console.log(item);
-			return item.slug == post.value.slug;
+			if (item.slug == post.value.slug) {
+				post.value.uid = item.uid;
+				return item;
+			}
 		});
 
 		if (items.length) {
@@ -254,9 +290,19 @@
 		// console.log(items, firebaseItems.value);
 	};
 
-	onMounted(() => {
+	const { data: similar_movies } = await useFetch(
+		`/api/genre/?genre=${post.value.genres[0]}&count=5`,
+		{ initialCache: false }
+	);
+
+	watchEffect(() => {
+		// console.log("change");
 		checkIfInWatchlist();
-		incrementPageView("media", post.value.id)
+	});
+
+	onMounted(() => {
+		// checkIfInWatchlist();
+		// incrementPageView("media", post.value.id);
 	});
 </script>
 

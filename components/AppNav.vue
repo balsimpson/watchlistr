@@ -96,9 +96,10 @@
 								tabindex="-1"
 								>Settings</a
 							>
+							<p class="px-4 text-sm text-stone-400">{{ firebaseUser.email }}</p>
 							<button
 								@click="signOut"
-								class="w-full px-4 py-2 text-sm text-left text-amber-300 hover:bg-stone-700"
+								class="w-full px-4 pb-2 text-sm text-left text-amber-300 hover:bg-stone-700"
 								role="menuitem"
 								tabindex="-1"
 							>

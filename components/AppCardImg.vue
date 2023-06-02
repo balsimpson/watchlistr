@@ -2,9 +2,10 @@
 	<!-- <div @click="navigateTo('/' + item.media_type + '/' + item.slug)" class="cursor-pointer"> -->
 
 	<div
+	ref="el"
 		v-if="item"
 		@click="navigateTo('/' + item.media_type + '/' + item.slug)"
-		class="relative h-full overflow-hidden transition border border-transparent rounded-lg shadow cursor-pointer hover:border-amber-500"
+		class="relative h-full overflow-hidden transition border border-transparent rounded-lg shadow cursor-pointer hover:border-amber-500 card"
 	>
 		<div class="absolute inset-0 rounded-lg bg-gradient-to-t from-black">
 			<div class="absolute inset-x-0 bottom-2">
@@ -38,4 +39,30 @@
 
 <script lang="ts" setup>
 	defineProps(["item"]);
+
+	const el = ref();
+	onMounted(async () => {
+		observeElements([el.value]);
+	});
 </script>
+
+<style>
+	html {
+		scroll-behavior: smooth;
+	}
+	.card {
+		/* Add your styles for the cards here */
+		/* Initialize the card to be hidden */
+		opacity: 0;
+		transform: translateY(-10px);
+		scale: 0;
+		transition: opacity 0.5s, transform 0.5s;
+	}
+	
+	/* Show the card when the visibility flag is set to true */
+	.card.visible {
+		opacity: 1;
+		scale: 1;
+		transform: translateY(0);
+	}
+</style>

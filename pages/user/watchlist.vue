@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="max-w-2xl p-6 mx-auto md:text-center">
+		<div class="max-w-3xl p-6 mx-auto md:text-center">
 			<h2 class="text-base font-semibold leading-7 text-indigo-400">
 				Your Watchlist
 			</h2>
@@ -9,13 +9,13 @@
 			>
 				Everything you need for a movie marathon
 			</p>
-			<p class="mt-6 text-sm leading-5 text-gray-400">
+			<!-- <p class="mt-6 text-sm leading-5 text-gray-400">
 				You can add up to 20 movies to your watchlist. This is deliberate.
 				Nobody wants an endless list that you never watch. So choose carefully.
-			</p>
+			</p> -->
 
 			<div
-				v-if="firebaseItems"
+				v-if="firebaseItems && firebaseItems.length"
 				class="grid grid-cols-2 gap-6 mt-12 md:grid-cols-3 gap-y-12"
 			>
 				<div v-for="item in firebaseItems">
