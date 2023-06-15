@@ -64,12 +64,19 @@
 		middleware: ["auth"],
 		layout: "admin",
 	});
+
+	
+	
 	const route = useRoute();
 	// const toast = useToast();
 
 	const { data: post, pending } = await useAsyncData("post", () =>
 		$fetch("/api/post?slug=" + route.params.slug)
 	);
+
+	useHead({
+		title: "Add Movie - Watchlistr Admin",
+	});
 
 	const error = reactive({
 		title: "",
@@ -126,8 +133,9 @@
 				last_updated: Date.now(),
 			};
 
+			console.log("id", ogPost.value);
 			// @ts-ignore
-			let res = await updateDocInFirestore("posts", ogPost.value.id, data);
+			let res = await updateDocInFirestore("posts", ogPost.value.uid, data);
 			console.log(res);
 
 			// @ts-ignore

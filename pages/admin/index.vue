@@ -66,9 +66,9 @@
 			class="grid grid-cols-3 gap-3 overflow-y-scroll lg:grid-cols-4"
 		>
 			<div v-for="item in items">
-				<!-- <NuxtLink v-if="item" :to="'/' + item.media_type + '/' + item.slug"> -->
+				<NuxtLink v-if="item" :to="'/admin/' + item.media_type + '/' + item.slug">
 				<AppCardImg :item="item" />
-				<!-- </NuxtLink> -->
+				</NuxtLink>
 			</div>
 		</div>
 	</div>
@@ -76,8 +76,12 @@
 
 <script lang="ts" setup>
 	definePageMeta({
-		middleware: ["auth"],
+		middleware: ["auth_admin"],
 		layout: "admin",
+	});
+
+	useHead({
+		title: "Admin Home - Watchlistr Admin",
 	});
 
 	const firebaseItems = useFirebaseItems();

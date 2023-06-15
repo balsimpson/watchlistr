@@ -188,7 +188,7 @@ export const getDocFromFirestoreWithSlug = async (
 			// doc.data() is never undefined for query doc snapshots
 			console.log(doc.id);
 			item = doc.data();
-			// item.uid = doc.id;
+			item.uid = doc.id;
 		});
 
 		// @ts-ignore
@@ -385,6 +385,24 @@ export const initUser = async () => {
 		});
 	});
 };
+
+/**
+ * Update a document in a collection
+ * @param {string} collectionName - the collection name
+ * @param {string} uid - the document id
+ * @param {object} data - the data to update
+ * @example updateDocInFirestore('products', '123', { title: "test", body: "test" })
+ */
+export const updateDocInFirestore = async (collectionName: string, uid: string, data: any) => {
+	try {
+	  const db = getFirestore();
+	  let res = await updateDoc(doc(db, collectionName, uid), data);
+	  return res;
+	} catch (error) {
+	  console.log('updateDocInFirestore-error', error);
+	  return error;
+	}
+  }
 
 /**
  * Add a document to a collection

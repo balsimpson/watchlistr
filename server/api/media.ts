@@ -19,11 +19,11 @@ export default defineEventHandler(async (event) => {
 	const app = initializeApp(firebaseConfig);
 
 	if (query.search) {
-		console.log(query.search);
+		// console.log(query.search);
 		// @ts-ignore
 		return await getDocMatchingTitle("media", query.search);
 	} else if (query.slug) {
-		console.log(query.slug);
+		// console.log(query.slug);
 		// @ts-ignore
 		return await getDocFromFirestoreWithSlug("media", query.slug);
 	} else {

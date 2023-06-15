@@ -31,7 +31,7 @@
 					{{ post.description }}
 				</p>
 			</div>
-			<div class="flex justify-end">
+			<div class="flex justify-end text-white">
 				<NuxtLink
 					v-if="showEditBtn"
 					:to="{

@@ -125,15 +125,35 @@
 
 		<!-- <CarouselMovieCard :id="post.id" /> -->
 
-		<div class="flex flex-col py-12 sm:px-6">
-			<p class="mt-2 text-3xl font-bold tracking-tight text-gray-300 sm:text-4xl">
-				You may also like
-			</p>
-			
-			<AppCarousel :items="similar_movies"/>
+		<!-- comments -->
+		<div v-if="post && post.comments" class="pt-12 space-y-3">
+			<div
+				v-for="item in post.comments"
+				:key="item"
+				class="relative flex flex-col border border-gray-800 shadow-sm bg-slate-700 rounded-xl"
+			>
+				<div class="flex-auto p-4 md:p-6">
+					<p class="text-base text-slate-300 md:text-xl">
+						<em>
+							{{ item.comment }}
+						</em>
+					</p>
+					<h3 class="mt-2 text-sm font-semibold text-slate-400 sm:text-base">
+						{{ item.author }}
+					</h3>
+				</div>
+			</div>
 		</div>
 
-		<!-- {{ similar_movies }} -->
+		<div class="flex flex-col py-12 ">
+			<p
+				class="mt-2 text-3xl font-bold tracking-tight text-gray-300 sm:text-4xl"
+			>
+				You may also like
+			</p>
+
+			<AppCarousel :items="similar_movies" />
+		</div>
 
 		<AppModalAnimated
 			:isActive="isModalActive"

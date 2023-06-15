@@ -59,7 +59,7 @@ export default Node.create({
 			"div",
 			mergeAttributes({
 				class:
-					"flex w-full items-center gap-x-6 border-t border-stone-600 border-dotted h-64",
+					"flex w-full items-center gap-x-6 border-t border-stone-600 border-dotted",
 			}),
 			// HTMLAttributes.title,
 
@@ -114,37 +114,37 @@ export default Node.create({
 					}),
 					HTMLAttributes.genres.join(", "),
 				],
-				// [
-				// 	"p",
-				// 	mergeAttributes({
-				// 		class: "text-sm",
-				// 	}),
-				// 	HTMLAttributes.overview,
-				// ],
 				[
-					"a",
+					"p",
 					mergeAttributes({
-						class: "text-sm font-semibold text-stone-300",
-						href: "https://www.imdb.com/title/" + HTMLAttributes.imdb_id,
-						target: "_blank",
+						class: "text-sm",
 					}),
-					[
-						"img",
-						mergeAttributes({
-							src: "/imdb_icon.png",
-							class: "rounded-lg shadow-lg w-12 ",
-						}),
-					],
+					HTMLAttributes.overview,
 				],
 				// [
-				// 	"button",
+				// 	"a",
 				// 	mergeAttributes({
-				// 		class: "text-sm font-semibold text-stone-300 block addToWatchlist",
-				// 		id: HTMLAttributes.imdb_id,
-				// 		onclick: `addWatchlist("add", ${HTMLAttributes.imdb_id})`
+				// 		class: "text-sm font-semibold text-stone-300",
+				// 		href: "https://www.imdb.com/title/" + HTMLAttributes.imdb_id,
+				// 		target: "_blank",
 				// 	}),
-				// 	"Add to Watchlist",
+				// 	[
+				// 		"img",
+				// 		mergeAttributes({
+				// 			src: "/imdb_icon.png",
+				// 			class: "rounded-lg shadow-lg w-12 ",
+				// 		}),
+				// 	],
 				// ],
+				[
+					"button",
+					mergeAttributes({
+						class: "text-sm font-semibold text-stone-300 block addToWatchlist",
+						id: HTMLAttributes.imdb_id,
+						onclick: `addWatchlist("add", ${HTMLAttributes.imdb_id})`
+					}),
+					"Add to Watchlist",
+				],
 			],
 		];
 	},

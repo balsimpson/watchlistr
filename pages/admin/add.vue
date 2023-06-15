@@ -55,6 +55,73 @@
 							v-model="itemComment"
 							placeholder="Your comments"
 						></textarea>
+
+						<!-- add comments -->
+						<textarea
+							v-model="comment"
+							tabindex="0"
+							rows="2"
+							class="w-full px-3 py-1 text-base leading-8 transition-colors duration-200 ease-in-out border rounded outline-none text-stone-600 bg-stone-600 border-stone-600 bg-opacity-20 focus:bg-transparent focus:ring-1 placeholder-stone-400 focus:ring-[#009cd9] focus:border-[#009cd9]"
+							placeholder="Enter quote..."
+						></textarea>
+
+						<input
+							v-model="author"
+							type="text"
+							required="true"
+							placeholder="Author"
+							class="w-full px-3 py-1 text-base leading-8 transition-colors duration-200 ease-in-out border rounded outline-none text-stone-600 bg-stone-600 border-stone-600 bg-opacity-20 focus:bg-transparent focus:ring-1 placeholder-stone-400 focus:ring-[#009cd9] focus:border-[#009cd9]"
+						/>
+
+						<button
+							@click.prevent="addComment('published')"
+							class="inline-flex px-4 py-1 mt-3 tracking-wide text-teal-600 transition border-2 border-teal-500 rounded cursor-pointer hover:bg-teal-600 hover:text-white"
+						>
+							<span
+								class="ml-3"
+								:class="[
+									publishBtnText == 'Updating...' ? 'pointer-events-none' : '',
+								]"
+								>Add comment</span
+							>
+						</button>
+
+						<!-- comments -->
+						<div
+							v-for="item in postComments"
+							:key="item"
+							class="relative flex flex-col bg-white border border-gray-200 shadow-sm rounded-xl"
+						>
+							<div class="flex-auto p-4 md:p-6">
+								<p class="text-base text-gray-800 md:text-xl">
+									<em>
+										{{ item.comment }}
+									</em>
+								</p>
+								<h3
+									class="mt-2 text-sm font-semibold text-gray-800 sm:text-base"
+								>
+									{{ item.author }}
+								</h3>
+							</div>
+
+							<button @click.prevent="deleteComment(item.comment)">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="absolute w-5 h-5 top-2 right-2"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M6 18L18 6M6 6l12 12"
+									/>
+								</svg>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -68,11 +135,14 @@
 					{{ errorMessage }}
 				</div>
 			</div>
-			<div v-if="successMessage" class="flex bg-black/[.05] justify-center w-full px-3 py-2 border border-green-500/50 rounded-full shadow-md max-w-md mx-auto mb-2">
-      <div class="text-sm text-center text-green-500">
-        {{ successMessage }}
-      </div>
-    </div>
+			<div
+				v-if="successMessage"
+				class="flex bg-black/[.05] justify-center w-full px-3 py-2 border border-green-500/50 rounded-full shadow-md max-w-md mx-auto mb-2"
+			>
+				<div class="text-sm text-center text-green-500">
+					{{ successMessage }}
+				</div>
+			</div>
 			<div
 				v-if="selectedItem"
 				class="flex items-center justify-between gap-x-6"
@@ -90,10 +160,14 @@
 	</div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 	definePageMeta({
 		middleware: ["auth"],
 		layout: "admin",
+	});
+
+	useHead({
+		title: "Add Movie - Watchlistr Admin",
 	});
 
 	const errorMessage = ref("");
@@ -111,9 +185,31 @@
 	const tagSuggestions = ["mindfuck"];
 	const itemComment = ref("");
 
+	const postComments = ref([]);
+	const comment = ref("");
+	const author = ref("");
+
+	const publishBtnText = ref("Update");
+
+	const addComment = () => {
+		postComments.value.unshift({
+			comment: comment.value,
+			author: author.value,
+		});
+
+		comment.value = "";
+		author.value = "";
+	};
+
+	const deleteComment = (val) => {
+		postComments.value = postComments.value.filter(
+			(item) => item.comment !== val
+		);
+	};
+
 	const addBtnTxt = ref("add to list");
 
-	const addTags = (tags: never[]) => {
+	const addTags = (tags) => {
 		itemTags.value = tags || [];
 		// console.log("tags", tags);
 	};
@@ -169,6 +265,7 @@
 		const data = {
 			created_at: Date.now(),
 			comment: itemComment.value,
+			comments: postComments.value,
 			tags: itemTags.value,
 			slug: slug,
 			...selectedItem.value,
@@ -179,15 +276,12 @@
 		// console.log("exists", docExists);
 
 		if (docExists) {
-
 			// console.log("no");
 			errorMessage.value = "Duplicate! Item already added.";
 
 			setTimeout(() => {
 				errorMessage.value = "";
 			}, 5000);
-
-			
 		} else {
 			let result = await addDocWithId(
 				"media",
@@ -195,13 +289,12 @@
 				selectedItem.value.imdb_id
 			);
 			// console.log("result", result);
-			selectedItem.value = ""
+			selectedItem.value = "";
 			successMessage.value = "Successfully added.";
 
 			setTimeout(() => {
 				successMessage.value = "";
 			}, 5000);
-			
 		}
 
 		addBtnTxt.value = "add to list";
