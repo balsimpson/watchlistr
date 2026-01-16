@@ -161,6 +161,9 @@
 		isEditingPost.value = !isEditingPost.value;
 	};
 
+	const addWatchlist = () => {
+		console.log("watchlist");
+	}
 	// watchEffect(() => {
 	//   console.log(route.params.slug)
 	//   refresh()

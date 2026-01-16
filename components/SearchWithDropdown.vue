@@ -155,7 +155,7 @@
 
 	const selectOption = (option) => {
 		selected.value = option;
-		
+
 		// console.log('selected', selected.value)
 		emit("selected", selected.value);
 		selected.value = null;

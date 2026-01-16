@@ -14,7 +14,7 @@
 		<div class="flex-grow w-full h-full mt-2 overflow-y-scroll">
 			<!-- <TiptapAddMovieTest @update="docUpdated" class="flex-grow" /> -->
 			<textarea class="w-full p-3 border rounded-lg" rows="10"></textarea>
-			<SearchWithDropdown :search-results="items" />
+			<MovieSearchWithDropdown @selected="addMovieToList" />
 		</div>
 
 		<div class="shrink-0">
@@ -47,10 +47,6 @@
 		// or middleware: 'auth'
 	});
 
-	const {
-		data: items
-	} = await useFetch<any[]>("/api/media");
-
 	// const toast = useToast();
 	const postTitle = ref();
 	const postTags = ref([]);
@@ -73,6 +69,11 @@
 	const textarea = ref();
 
 	const userCookie = useCookie("userCookie");
+
+	// @ts-ignore
+	const addMovieToList = (event) => {
+		console.log("selected", event);
+	}
 
 	const docUpdated = (doc: {}) => {
 		// @ts-ignore
