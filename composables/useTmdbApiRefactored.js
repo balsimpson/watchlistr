@@ -286,7 +286,8 @@ const getImageURL = (path, size = "large") => {
 	if (path) {
 		return `https://image.tmdb.org/t/p/${poster_sizes[size]}${path}`;
 	} else {
-		return "imgnotfound.png";
+		// return "imgnotfound.png";
+		return "";
 	}
 };
 
