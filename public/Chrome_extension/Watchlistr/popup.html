@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="popup.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="sticky-wrapper">
+      <div class="header">
+        <div class="header-left">
+          <button id="back-btn" class="back-btn" style="display: none">
+            &larr;
+          </button>
+          <div class="title-group">
+            <span class="logo" id="app-title">WATCHLISTR</span>
+            <span id="list-count" class="list-count">0 Movies</span>
+          </div>
+        </div>
+        <div class="view-toggle">
+          <button id="view-active" class="toggle-btn active" title="To Watch">
+            List
+          </button>
+          <button id="view-watched" class="toggle-btn" title="Watched History">
+            Seen
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar" id="main-toolbar">
+        <div class="search-wrapper">
+          <input
+            type="text"
+            id="search-input"
+            class="search-field"
+            placeholder="Search..."
+          />
+          <!-- NEW: Clear Button -->
+          <button id="search-clear" class="search-clear" style="display: none">
+            &times;
+          </button>
+        </div>
+
+        <div class="filters-row" id="filters-row">
+          <select id="filter-genre" class="control-input">
+            <option value="all">All Genres</option>
+          </select>
+
+          <select id="sort-order" class="control-input">
+            <option value="added_desc">Recently Added</option>
+            <option value="added_asc">Oldest Added</option>
+            <option value="year_desc">Year (Newest)</option>
+            <option value="year_asc">Year (Oldest)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div id="movie-list" class="movie-list-container"></div>
+
+    <!-- NEW: Manual Search Trigger -->
+    <button
+      id="online-search-btn"
+      class="manual-search-btn"
+      style="display: none"
+    >
+      Search TMDB for "<span id="search-term-span"></span>"
+    </button>
+
+    <div id="empty-state" class="empty-state">
+      <p>List is empty.</p>
+      <small style="margin-top: 5px; display: block"
+        >Time to discover something new.</small
+      >
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
