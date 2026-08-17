@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+html {
+  background: #0c0a09;
+}
+
+body {
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 15% 0%, rgb(120 53 15 / 0.18), transparent 35rem),
+    #0c0a09;
+  color: var(--ui-text-highlighted);
+}
+
+::selection {
+  background: rgb(245 158 11 / 0.35);
+}

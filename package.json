@@ -1,36 +1,39 @@
 {
-  "name": "nuxt-app",
+  "name": "watchlistr-web",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint . --max-warnings=0",
+    "test": "node --test tests/*.test.mjs",
+    "typecheck": "nuxt typecheck",
+    "typecheck:convex": "tsc --noEmit -p convex/tsconfig.json",
+    "convex:codegen": "convex codegen"
   },
   "devDependencies": {
-    "@types/node": "^18",
-    "nuxt": "^3.4.3"
+    "@eslint/js": "^10.0.1",
+    "@iconify-json/lucide": "^1.2.122",
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.66.0",
+    "@typescript-eslint/parser": "^8.66.0",
+    "eslint": "^10.8.1",
+    "eslint-plugin-vue": "^10.10.0",
+    "nuxt": "^4.5.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.8.0",
+    "vue-eslint-parser": "^10.4.1",
+    "vue-router": "^5.2.0",
+    "vue-tsc": "^3.3.9"
   },
   "dependencies": {
-    "@nuxtjs/tailwindcss": "^6.6.7",
-    "@tailwindcss/typography": "^0.5.9",
-    "@tiptap/extension-bubble-menu": "^2.0.3",
-    "@tiptap/extension-character-count": "^2.0.3",
-    "@tiptap/extension-code": "^2.0.3",
-    "@tiptap/extension-heading": "^2.0.3",
-    "@tiptap/extension-highlight": "^2.0.3",
-    "@tiptap/extension-image": "^2.0.3",
-    "@tiptap/extension-link": "^2.0.3",
-    "@tiptap/extension-placeholder": "^2.0.3",
-    "@tiptap/extension-table": "^2.0.3",
-    "@tiptap/extension-table-cell": "^2.0.3",
-    "@tiptap/extension-table-header": "^2.0.3",
-    "@tiptap/extension-table-row": "^2.0.3",
-    "@tiptap/extension-text-align": "^2.0.3",
-    "@tiptap/extension-youtube": "^2.0.3",
-    "@tiptap/starter-kit": "^2.0.3",
-    "@tiptap/vue-3": "^2.0.3",
-    "firebase": "^9.21.0"
+    "@auth0/auth0-vue": "^2.4.0",
+    "@nuxt/ui": "^4.10.0",
+    "@tiptap/core": "^3.29.2",
+    "@tiptap/vue-3": "^3.29.2",
+    "convex": "^1.27.0"
   }
 }
