@@ -23,7 +23,10 @@ export default defineNuxtConfig({
       convexUrl: process.env.NUXT_PUBLIC_CONVEX_URL ?? process.env.VITE_CONVEX_URL ?? '',
       auth0Domain,
       auth0ClientId: process.env.NUXT_PUBLIC_AUTH0_CLIENT_ID ?? process.env.AUTH0_CLIENT_ID ?? '',
-      auth0Audience: process.env.NUXT_PUBLIC_AUTH0_AUDIENCE ?? process.env.VITE_CONVEX_SITE_URL ?? '',
+      // Audience defaults to the Auth0 client ID, which is what Convex
+      // validates the token's `aud` claim against. It's also required for
+      // Auth0 to issue a refresh token (offline_access alone isn't enough).
+      auth0Audience: process.env.NUXT_PUBLIC_AUTH0_AUDIENCE ?? process.env.AUTH0_CLIENT_ID ?? '',
     },
   },
   typescript: {

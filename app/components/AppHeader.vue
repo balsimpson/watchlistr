@@ -9,17 +9,24 @@
         <UButton to="/" color="neutral" variant="ghost" size="sm">Discover</UButton>
         <UButton to="/user/watchlist" color="neutral" variant="ghost" size="sm">My library</UButton>
 
-        <template v-if="isAuthenticated">
-          <UButton to="/admin" color="neutral" variant="ghost" size="sm">Admin</UButton>
-          <UAvatar v-if="user?.picture" :src="user.picture" :alt="user.name ?? 'Account'" size="sm" class="ml-2" />
-          <UButton color="neutral" variant="ghost" size="sm" :loading="isLoading" @click="logoutUser">
-            Sign out
+        <!-- Auth state differs between SSR (unknown) and client (resolved by
+             Auth0), so this block is client-rendered to avoid hydration mismatches. -->
+        <ClientOnly>
+          <template v-if="isAuthenticated">
+            <UButton to="/admin" color="neutral" variant="ghost" size="sm">Admin</UButton>
+            <UAvatar v-if="user?.picture" :src="user.picture" :alt="user.name ?? 'Account'" size="sm" class="ml-2" />
+            <UButton color="neutral" variant="ghost" size="sm" :loading="isLoading" @click="logoutUser">
+              Sign out
+            </UButton>
+          </template>
+          <UButton v-else-if="isConfigured" color="primary" variant="solid" size="sm" :loading="isLoading" @click="login">
+            Sign in
           </UButton>
-        </template>
-        <UButton v-else-if="isConfigured" color="primary" variant="solid" size="sm" :loading="isLoading" @click="login">
-          Sign in
-        </UButton>
-        <UBadge v-else color="neutral" variant="soft" size="sm" class="ml-2">Auth0 setup required</UBadge>
+          <UBadge v-else color="neutral" variant="soft" size="sm" class="ml-2">Auth0 setup required</UBadge>
+          <template #fallback>
+            <span class="inline-block h-8 w-[76px]" aria-hidden="true" />
+          </template>
+        </ClientOnly>
       </nav>
     </div>
   </header>

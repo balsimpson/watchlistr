@@ -39,6 +39,7 @@ export default defineSchema({
     ownerId: v.id('users'),
     catalogItemId: v.id('catalogItems'),
     uid: v.string(),
+    sourceUrl: v.optional(v.string()),
     state: v.union(v.literal('saved'), v.literal('completed')),
     addedAt: v.number(),
     completedAt: v.optional(v.number()),

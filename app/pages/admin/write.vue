@@ -39,6 +39,7 @@ const isPublishing = ref(false)
 const isClearing = ref(false)
 const toast = useToast()
 const { $convex } = useNuxtApp()
+const { isAuthenticated, isLoading: authLoading } = useWatchlistrAuth()
 const activeEditor = shallowRef<Editor>()
 const dragHandleReady = ref(false)
 const insertModalOpen = ref(false)
@@ -277,6 +278,19 @@ async function saveDraftInternal(showToast: boolean): Promise<boolean> {
     return true
   }
 
+  if (authLoading.value || !isAuthenticated.value) {
+    persistBrowserDraft()
+    if (showToast && !authLoading.value) {
+      toast.add({
+        title: 'Sign in to save this article',
+        description: 'Your writing is saved in this browser until you sign in.',
+        color: 'warning',
+        icon: 'i-lucide-lock-keyhole',
+      })
+    }
+    return false
+  }
+
   persistBrowserDraft()
 
   if (!$convex) {
@@ -373,6 +387,8 @@ function loadBrowserDraft() {
 }
 
 function loadArticle() {
+  if (authLoading.value || !isAuthenticated.value) return
+
   if (!articleId.value) {
     loadBrowserDraft()
     return
@@ -451,7 +467,7 @@ async function clearDraft() {
 }
 
 async function togglePublished() {
-  if (!$convex || isPublishing.value || !isReady.value || articleLoadError.value) return
+  if (!$convex || authLoading.value || !isAuthenticated.value || isPublishing.value || !isReady.value || articleLoadError.value) return
 
   const published = articleStatus.value === 'draft'
   isPublishing.value = true
@@ -499,7 +515,9 @@ defineShortcuts({
   meta_s: () => saveDraft(true),
 })
 
-onMounted(loadArticle)
+watch([authLoading, isAuthenticated], () => {
+  if (!authLoading.value && isAuthenticated.value) loadArticle()
+}, { immediate: true })
 
 onUnmounted(() => {
   if (autoSaveTimer) clearTimeout(autoSaveTimer)

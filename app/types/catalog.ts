@@ -24,6 +24,7 @@ export type CatalogItem = {
 export type LibraryEntry = {
   _id?: string
   uid: string
+  sourceUrl?: string
   state: LibraryState
   addedAt: number
   completedAt?: number

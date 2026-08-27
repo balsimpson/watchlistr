@@ -22,6 +22,9 @@ type AdminArticle = {
 }
 
 type BrowserDraft = PersistedEditorDraft
+type ArticleListItem =
+  | { kind: 'article'; article: AdminArticle }
+  | { kind: 'browser'; draft: BrowserDraft }
 type CollectionAction = 'publish' | 'delete'
 type DeleteTarget =
   | { kind: 'article'; article: AdminArticle }
@@ -33,7 +36,7 @@ const { isAuthenticated, isLoading: authLoading } = useWatchlistrAuth()
 const toast = useToast()
 const articles = ref<AdminArticle[]>([])
 const browserDraft = ref<BrowserDraft | null>(null)
-const statusFilter = ref<CollectionStatus | 'all'>('draft')
+const statusFilter = ref<CollectionStatus | 'all'>('all')
 const searchTerm = ref('')
 const isLoading = ref(true)
 const error = ref('')
@@ -44,20 +47,32 @@ let articlesLoad: Promise<void> | undefined
 
 const draftArticles = computed(() => articles.value.filter((article) => article.status === 'draft'))
 const publishedArticles = computed(() => articles.value.filter((article) => article.status === 'published'))
-const filteredArticles = computed(() => {
+const draftArticleCount = computed(() => draftArticles.value.length + (browserDraft.value ? 1 : 0))
+const articleCount = computed(() => articles.value.length + (browserDraft.value ? 1 : 0))
+const filteredItems = computed<ArticleListItem[]>(() => {
   const term = searchTerm.value.trim().toLocaleLowerCase()
+  const items: ArticleListItem[] = articles.value
+    .filter((article) => {
+      const matchesStatus = statusFilter.value === 'all' || article.status === statusFilter.value
+      const matchesSearch = !term || `${article.title} ${article.slug}`.toLocaleLowerCase().includes(term)
+      return matchesStatus && matchesSearch
+    })
+    .map((article) => ({ kind: 'article', article }))
 
-  return articles.value.filter((article) => {
-    const matchesStatus = statusFilter.value === 'all' || article.status === statusFilter.value
-    const matchesSearch = !term || `${article.title} ${article.slug}`.toLocaleLowerCase().includes(term)
-    return matchesStatus && matchesSearch
-  }).sort((left, right) => right.updatedAt - left.updatedAt)
+  const draft = browserDraft.value
+  if (draft) {
+    const matchesStatus = statusFilter.value === 'all' || statusFilter.value === 'draft'
+    const matchesSearch = !term || `${draft.title ?? ''} ${draft.slug ?? ''} ${draft.excerpt ?? ''}`.toLocaleLowerCase().includes(term)
+    if (matchesStatus && matchesSearch) items.push({ kind: 'browser', draft })
+  }
+
+  return items.sort((left, right) => getItemUpdatedAt(right) - getItemUpdatedAt(left))
 })
 
 const filterOptions = computed(() => [
-  { value: 'draft' as const, label: 'Drafts', count: draftArticles.value.length },
+  { value: 'all' as const, label: 'All articles', count: articleCount.value },
+  { value: 'draft' as const, label: 'Drafts', count: draftArticleCount.value },
   { value: 'published' as const, label: 'Published', count: publishedArticles.value.length },
-  { value: 'all' as const, label: 'All articles', count: articles.value.length },
 ])
 
 const errorDescription = computed(() => {
@@ -69,6 +84,10 @@ const errorDescription = computed(() => {
 })
 
 const browserDraftWordCount = computed(() => countWords(browserDraft.value?.content ?? ''))
+
+function getItemUpdatedAt(item: ArticleListItem) {
+  return item.kind === 'browser' ? item.draft.savedAt ?? 0 : item.article.updatedAt
+}
 
 function countWords(value: string) {
   return value.replace(/[#*_>`~-]/g, ' ').trim().split(/\s+/).filter(Boolean).length
@@ -103,7 +122,7 @@ function slugify(value: string) {
 
 async function syncBrowserDraft() {
   const draft = browserDraft.value
-  if (!$convex || !draft || draft.collectionId || !hasBrowserDraftValues(draft)) return
+  if (!$convex || authLoading.value || !isAuthenticated.value || !draft || draft.collectionId || !hasBrowserDraftValues(draft)) return
 
   try {
     const slug = draft.slug || slugify(draft.title ?? '') || `draft-${draft.savedAt ?? Date.now()}`
@@ -135,7 +154,7 @@ function isPendingAction(collectionId: Id<'discoverCollections'>, action: Collec
 }
 
 async function togglePublished(article: AdminArticle) {
-  if (!$convex || pendingAction.value) return
+  if (!$convex || authLoading.value || !isAuthenticated.value || pendingAction.value) return
 
   pendingAction.value = { collectionId: article._id, action: 'publish' }
   const published = article.status === 'draft'
@@ -201,7 +220,7 @@ const deleteModalDescription = computed(() => {
 
 async function confirmDelete() {
   const target = deleteTarget.value
-  if (!target || pendingAction.value) return
+  if (!target || authLoading.value || !isAuthenticated.value || pendingAction.value) return
 
   if (target.kind === 'browser') {
     if (import.meta.client) localStorage.removeItem(draftStorageKey)
@@ -274,6 +293,7 @@ async function loadCollections() {
 
 watch([authLoading, isAuthenticated], () => {
   void loadCollections()
+  void syncBrowserDraft()
 }, { immediate: true })
 
 onMounted(() => {
@@ -285,7 +305,7 @@ onUnmounted(() => stopCollections?.())
 
 useSeoMeta({
   title: 'Editorial desk — Watchlistr',
-  description: 'Review and publish Watchlistr articles.',
+  description: 'Manage Watchlistr article drafts and published content.',
 })
 </script>
 
@@ -303,51 +323,22 @@ useSeoMeta({
       <UContainer class="max-w-6xl py-8 sm:py-10">
         <div class="flex flex-col justify-between gap-6 border-b border-default pb-8 sm:flex-row sm:items-end">
           <div>
-            <h1 class="text-3xl font-semibold tracking-tight text-highlighted sm:text-4xl">Saved drafts</h1>
-            <p class="mt-3 max-w-2xl text-base leading-7 text-muted">Review an article, publish it to Discover, or keep it private while you work.</p>
+            <h1 class="text-3xl font-semibold tracking-tight text-highlighted sm:text-4xl">Articles</h1>
+            <p class="mt-3 max-w-2xl text-base leading-7 text-muted">Manage drafts and published articles in one place.</p>
           </div>
           <div class="flex flex-wrap gap-2">
             <UButton to="/admin/write" color="primary" variant="solid" icon="i-lucide-pencil">Write an article</UButton>
           </div>
         </div>
 
-        <section v-if="browserDraft" class="mt-8 border border-primary/30 bg-primary/5 px-5 py-5 sm:px-6" aria-labelledby="browser-draft-heading">
-          <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex min-w-0 items-start gap-4">
-              <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
-                <UIcon name="i-lucide-pencil" class="size-5" />
-              </div>
-              <div class="min-w-0">
-                <div class="flex flex-wrap items-center gap-2">
-                  <h2 id="browser-draft-heading" class="font-semibold text-highlighted">{{ browserDraft.title || 'Untitled writing draft' }}</h2>
-                  <UBadge color="primary" variant="soft" size="xs">Writing draft</UBadge>
-                </div>
-                <p class="mt-1 line-clamp-2 text-sm text-muted">
-                  {{ browserDraft.excerpt || `${browserDraftWordCount} words · saved in this browser` }}
-                </p>
-              </div>
-            </div>
-            <div class="flex shrink-0 items-center gap-2">
-              <UButton to="/admin/write" color="primary" variant="soft" trailing-icon="i-lucide-arrow-right">Continue writing</UButton>
-              <UButton
-                color="error"
-                variant="ghost"
-                icon="i-lucide-trash-2"
-                aria-label="Delete writing draft"
-                @click="requestDeleteBrowserDraft"
-              />
-            </div>
-          </div>
-        </section>
-
         <section class="mt-10" aria-labelledby="articles-heading">
           <div class="flex flex-col gap-5 border-b border-default pb-5 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <h2 id="articles-heading" class="text-xl font-semibold text-highlighted">Publishing queue</h2>
+              <h2 id="articles-heading" class="text-xl font-semibold text-highlighted">All articles</h2>
               <p class="mt-1 text-sm text-muted">Drafts stay private. Published articles appear on Discover.</p>
             </div>
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div class="flex items-center gap-1" role="tablist" aria-label="Article status">
+              <div class="flex flex-wrap items-center gap-1" role="tablist" aria-label="Article status">
                 <UButton
                   v-for="option in filterOptions"
                   :key="option.value"
@@ -365,7 +356,7 @@ useSeoMeta({
             </div>
           </div>
 
-          <UAlert v-if="error" class="mt-6" color="error" variant="soft" icon="i-lucide-circle-alert" title="The publishing queue is unavailable" :description="errorDescription" />
+          <UAlert v-if="error" class="mt-6" color="error" variant="soft" icon="i-lucide-circle-alert" title="Articles are unavailable" :description="errorDescription" />
 
           <div v-else-if="isLoading" class="mt-2 divide-y divide-default border-b border-default">
             <div v-for="slot in 3" :key="slot" class="flex items-center justify-between gap-4 py-5">
@@ -380,65 +371,93 @@ useSeoMeta({
             </div>
           </div>
 
-          <div v-else-if="filteredArticles.length" class="mt-2 divide-y divide-default border-b border-default">
-            <article v-for="article in filteredArticles" :key="article._id" class="group flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
-              <div class="flex min-w-0 items-start gap-4">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-elevated text-muted transition-colors group-hover:text-primary">
-                  <UIcon :name="article.status === 'published' ? 'i-lucide-globe-2' : 'i-lucide-file-text'" class="size-5" />
-                </div>
-                <div class="min-w-0">
-                  <div class="flex flex-wrap items-center gap-2">
-                    <h3 class="truncate font-semibold text-highlighted">{{ article.title }}</h3>
-                    <UBadge color="primary" variant="soft" size="xs">Article</UBadge>
-                    <UBadge :color="article.status === 'published' ? 'success' : 'neutral'" variant="soft" size="xs">
-                      {{ formatStatus(article.status) }}
-                    </UBadge>
+          <div v-else-if="filteredItems.length" class="mt-2 divide-y divide-default border-b border-default">
+            <article v-for="item in filteredItems" :key="item.kind === 'browser' ? 'browser-draft' : item.article._id" class="group flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
+              <template v-if="item.kind === 'browser'">
+                <div class="flex min-w-0 items-start gap-4">
+                  <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
+                    <UIcon name="i-lucide-pencil" class="size-5" />
                   </div>
-                  <p class="mt-1 truncate text-sm text-muted">/{{ article.slug }} · Updated {{ formatDate(article.updatedAt) }}</p>
+                  <div class="min-w-0">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <h3 class="truncate font-semibold text-highlighted">{{ item.draft.title || 'Untitled writing draft' }}</h3>
+                      <UBadge color="neutral" variant="soft" size="xs">Draft</UBadge>
+                    </div>
+                    <p class="mt-1 truncate text-sm text-muted">
+                      {{ item.draft.excerpt ? `${item.draft.excerpt} · saved in this browser` : `${browserDraftWordCount} words · saved in this browser` }}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div class="flex shrink-0 items-center gap-3 sm:ps-4">
-                <span v-if="article.status === 'published'" class="hidden text-xs text-muted md:inline">Live {{ formatDate(article.publishedAt) }}</span>
-                <UButton
-                  :to="{ path: '/admin/write', query: { articleId: article._id } }"
-                  color="neutral"
-                  variant="soft"
-                  size="sm"
-                  icon="i-lucide-pencil"
-                >
-                  Edit
-                </UButton>
-                <UButton
-                  :color="article.status === 'draft' ? 'primary' : 'neutral'"
-                  :variant="article.status === 'draft' ? 'solid' : 'soft'"
-                  size="sm"
-                  :icon="article.status === 'draft' ? 'i-lucide-send' : 'i-lucide-eye-off'"
-                  :loading="isPendingAction(article._id, 'publish')"
-                  :disabled="Boolean(pendingAction)"
-                  @click="togglePublished(article)"
-                >
-                  {{ article.status === 'draft' ? 'Publish' : 'Unpublish' }}
-                </UButton>
-                <UButton
-                  v-if="article.status === 'draft'"
-                  color="error"
-                  variant="ghost"
-                  size="sm"
-                  icon="i-lucide-trash-2"
-                  :aria-label="`Delete ${article.title}`"
-                  :loading="isPendingAction(article._id, 'delete')"
-                  :disabled="Boolean(pendingAction)"
-                  @click="requestDeleteArticle(article)"
-                />
-              </div>
+                <div class="flex shrink-0 items-center gap-3 sm:ps-4">
+                  <UButton to="/admin/write" color="primary" variant="soft" size="sm" trailing-icon="i-lucide-arrow-right">Continue writing</UButton>
+                  <UButton
+                    color="error"
+                    variant="ghost"
+                    size="sm"
+                    icon="i-lucide-trash-2"
+                    aria-label="Delete writing draft"
+                    @click="requestDeleteBrowserDraft"
+                  />
+                </div>
+              </template>
+              <template v-else>
+                <div class="flex min-w-0 items-start gap-4">
+                  <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-elevated text-muted transition-colors group-hover:text-primary">
+                    <UIcon :name="item.article.status === 'published' ? 'i-lucide-globe-2' : 'i-lucide-file-text'" class="size-5" />
+                  </div>
+                  <div class="min-w-0">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <h3 class="truncate font-semibold text-highlighted">{{ item.article.title }}</h3>
+                      <UBadge :color="item.article.status === 'published' ? 'success' : 'neutral'" variant="soft" size="xs">
+                        {{ formatStatus(item.article.status) }}
+                      </UBadge>
+                    </div>
+                    <p class="mt-1 truncate text-sm text-muted">/{{ item.article.slug }} · Updated {{ formatDate(item.article.updatedAt) }}</p>
+                  </div>
+                </div>
+                <div class="flex shrink-0 items-center gap-3 sm:ps-4">
+                  <span v-if="item.article.status === 'published'" class="hidden text-xs text-muted md:inline">Live {{ formatDate(item.article.publishedAt) }}</span>
+                  <UButton
+                    :to="{ path: '/admin/write', query: { articleId: item.article._id } }"
+                    color="neutral"
+                    variant="soft"
+                    size="sm"
+                    icon="i-lucide-pencil"
+                  >
+                    Edit
+                  </UButton>
+                  <UButton
+                    :color="item.article.status === 'draft' ? 'primary' : 'neutral'"
+                    :variant="item.article.status === 'draft' ? 'solid' : 'soft'"
+                    size="sm"
+                    :icon="item.article.status === 'draft' ? 'i-lucide-send' : 'i-lucide-eye-off'"
+                    :loading="isPendingAction(item.article._id, 'publish')"
+                    :disabled="Boolean(pendingAction)"
+                    @click="togglePublished(item.article)"
+                  >
+                    {{ item.article.status === 'draft' ? 'Publish' : 'Unpublish' }}
+                  </UButton>
+                  <UButton
+                    v-if="item.article.status === 'draft'"
+                    color="error"
+                    variant="ghost"
+                    size="sm"
+                    icon="i-lucide-trash-2"
+                    :aria-label="`Delete ${item.article.title}`"
+                    :loading="isPendingAction(item.article._id, 'delete')"
+                    :disabled="Boolean(pendingAction)"
+                    @click="requestDeleteArticle(item.article)"
+                  />
+                </div>
+              </template>
             </article>
           </div>
 
           <div v-else class="border-b border-default py-16 text-center">
             <UIcon name="i-lucide-file-text" class="mx-auto size-8 text-dimmed" />
-            <h3 class="mt-4 font-semibold text-highlighted">{{ searchTerm ? 'No articles match that search' : statusFilter === 'draft' ? 'No saved drafts yet' : statusFilter === 'published' ? 'Nothing published yet' : 'No articles yet' }}</h3>
+            <h3 class="mt-4 font-semibold text-highlighted">{{ searchTerm ? 'No articles match that search' : statusFilter === 'draft' ? 'No drafts yet' : statusFilter === 'published' ? 'Nothing published yet' : 'No articles yet' }}</h3>
             <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-muted">
-              {{ searchTerm ? 'Try a different title or slug.' : statusFilter === 'draft' ? 'Write an article and it will appear here automatically for review.' : statusFilter === 'published' ? 'Publish a saved draft when it is ready for Discover.' : 'Write an article to start the publishing queue.' }}
+              {{ searchTerm ? 'Try a different title or slug.' : statusFilter === 'draft' ? 'Write an article and it will appear here automatically.' : statusFilter === 'published' ? 'Publish a draft when it is ready for Discover.' : 'Write an article to start building your editorial library.' }}
             </p>
             <div class="mt-4 flex flex-wrap justify-center gap-2">
               <UButton v-if="!searchTerm" color="primary" variant="soft" icon="i-lucide-pencil" to="/admin/write">Write an article</UButton>

@@ -19,13 +19,14 @@ export const list = query({
       return {
         _id: entry._id,
         uid: entry.uid,
+        sourceUrl: entry.sourceUrl,
         state: entry.state,
         addedAt: entry.addedAt,
         completedAt: entry.completedAt,
         updatedAt: entry.updatedAt,
         deletedAt: entry.deletedAt,
         revision: entry.revision,
-        item: publicCatalogItem(item),
+        item: publicCatalogItem(item, entry.sourceUrl),
       }
     }))
   },
@@ -36,6 +37,7 @@ export const upsert = mutation({
     operationId: v.string(),
     expectedRevision: v.optional(v.number()),
     item: catalogInputValidator,
+    sourceUrl: v.optional(v.string()),
     state: libraryStateValidator,
     addedAt: v.number(),
     completedAt: v.optional(v.number()),
@@ -50,6 +52,8 @@ export const upsert = mutation({
     assertUid(args.item.uid, args.item.source, args.item.kind, args.item.sourceId)
 
     const now = Date.now()
+    const sourceUrl = args.sourceUrl ?? args.item.sourceUrl
+    assertCatalogInput({ ...args.item, sourceUrl })
     const catalogItemId = await upsertCatalogItem(ctx, args.item, now)
     const existing = await ctx.db.query('libraryEntries').withIndex('by_owner_and_uid', (q) => q.eq('ownerId', ownerId).eq('uid', args.item.uid)).unique()
     if (existing) {
@@ -64,6 +68,7 @@ export const upsert = mutation({
       await ctx.db.patch(existing._id, {
         catalogItemId,
         state,
+        sourceUrl: sourceUrl ?? existing.sourceUrl,
         addedAt: Math.min(existing.addedAt, args.addedAt),
         completedAt,
         updatedAt: now,
@@ -75,6 +80,7 @@ export const upsert = mutation({
         ownerId,
         catalogItemId,
         uid: args.item.uid,
+        sourceUrl,
         state: args.state,
         addedAt: args.addedAt,
         completedAt: args.state === 'completed' ? args.completedAt ?? now : undefined,
@@ -92,6 +98,7 @@ export const importBatch = mutation({
     batchId: v.string(),
     entries: v.array(v.object({
       item: catalogInputValidator,
+      sourceUrl: v.optional(v.string()),
       state: libraryStateValidator,
       addedAt: v.number(),
       completedAt: v.optional(v.number()),
@@ -109,6 +116,8 @@ export const importBatch = mutation({
     for (const entry of args.entries) {
       assertCatalogInput(entry.item)
       assertUid(entry.item.uid, entry.item.source, entry.item.kind, entry.item.sourceId)
+      const sourceUrl = entry.sourceUrl ?? entry.item.sourceUrl
+      assertCatalogInput({ ...entry.item, sourceUrl })
       const catalogItemId = await upsertCatalogItem(ctx, entry.item, now)
       const existing = await ctx.db.query('libraryEntries').withIndex('by_owner_and_uid', (q) => q.eq('ownerId', ownerId).eq('uid', entry.item.uid)).unique()
       if (existing) {
@@ -116,6 +125,7 @@ export const importBatch = mutation({
         await ctx.db.patch(existing._id, {
           catalogItemId,
           state,
+          sourceUrl: sourceUrl ?? existing.sourceUrl,
           addedAt: Math.min(existing.addedAt, entry.addedAt),
           completedAt: state === 'completed'
             ? Math.max(existing.completedAt ?? 0, entry.completedAt ?? now)
@@ -129,6 +139,7 @@ export const importBatch = mutation({
           ownerId,
           catalogItemId,
           uid: entry.item.uid,
+          sourceUrl,
           state: entry.state,
           addedAt: entry.addedAt,
           completedAt: entry.state === 'completed' ? entry.completedAt ?? now : undefined,
@@ -198,7 +209,6 @@ async function upsertCatalogItem(ctx: MutationCtx, item: Infer<typeof catalogInp
     description: item.description,
     categories: item.categories,
     externalUrl: item.externalUrl,
-    sourceUrl: item.sourceUrl,
     details: item.details,
     updatedAt: now,
   }
@@ -229,8 +239,8 @@ function assertUid(uid: string, source: string, kind: string, sourceId: string) 
 function publicCatalogItem(item: {
   _id: Id<'catalogItems'>, uid: string, kind: 'movie' | 'tv' | 'book', source: 'tmdb' | 'google-books', sourceId: string,
   title: string, creators: string[], year?: string, imageUrl?: string, description?: string, categories: string[],
-  externalUrl?: string, sourceUrl?: string, details: Record<string, unknown>, createdAt: number, updatedAt: number,
-}) {
+  externalUrl?: string, details: Record<string, unknown>, createdAt: number, updatedAt: number,
+}, sourceUrl?: string) {
   return {
     _id: item._id,
     uid: item.uid,
@@ -244,7 +254,7 @@ function publicCatalogItem(item: {
     description: item.description,
     categories: item.categories,
     externalUrl: item.externalUrl,
-    sourceUrl: item.sourceUrl,
+    sourceUrl,
     details: item.details,
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,

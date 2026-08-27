@@ -44,6 +44,7 @@ export const catalogOutputValidator = v.object({
 export const libraryEntryOutputValidator = v.object({
   _id: v.id('libraryEntries'),
   uid: v.string(),
+  sourceUrl: v.optional(v.string()),
   state: libraryStateValidator,
   addedAt: v.number(),
   completedAt: v.optional(v.number()),
