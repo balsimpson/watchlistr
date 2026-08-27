@@ -34,7 +34,7 @@
     "@nuxt/ui": "^4.10.0",
     "@tiptap/core": "^3.29.2",
     "@tiptap/vue-3": "^3.29.2",
-    "@vercel/analytics": "^2.0.1",
+    "@vercel/analytics": "2.0.2-canary",
     "convex": "^1.27.0"
   }
 }
