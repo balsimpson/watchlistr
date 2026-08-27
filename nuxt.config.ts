@@ -6,7 +6,7 @@ const auth0Domain = (process.env.NUXT_PUBLIC_AUTH0_DOMAIN ?? process.env.AUTH0_J
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: false },
-  modules: ['@nuxt/ui'],
+  modules: ['@nuxt/ui', '@vercel/analytics'],
   css: ['~/assets/css/main.css'],
   icon: {
     serverBundle: {
