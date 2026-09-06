@@ -2,9 +2,17 @@
 
 ## Project Overview
 
-Watchlistr is a Nuxt 4 web application for discovering movies, TV shows, and books and saving them to a personal library. The web app shares its Convex backend contract with the Watchlistr browser extension. Auth0 subjects are the account identity across both clients.
+Watchlistr is a Nuxt 4 web application for discovering movies, TV shows, and books and saving them to a personal library. This repository owns the shared Convex backend used directly by both the website and the Watchlistr browser extension. Auth0 subjects are the account identity across both clients.
 
 The current application uses Convex and Auth0. Do not reintroduce Firebase or the removed legacy content APIs.
+
+## Shared backend ownership
+
+- `convex/` is the only source and deployment location for the shared Watchlistr Convex backend.
+- The Chrome extension is a separate client. It connects directly to the same Convex deployment and does not depend on the Nuxt website being online.
+- Do not create or maintain a second deployable backend in the extension repository.
+- Shared schema, authentication, library, admin, and Discover function changes begin here and must preserve both client contracts.
+- Website hosting and Convex deployment are separate operations. Do not claim that a web deployment updates Convex unless the Convex deployment command also ran and succeeded.
 
 ## Repository Layout
 
@@ -12,7 +20,7 @@ The current application uses Convex and Auth0. Do not reintroduce Firebase or th
 - `convex/`: Convex schema, validators, helpers, queries, and mutations. The `_generated/` files are checked in intentionally.
 - `server/api/`: server-only provider and embed endpoints. Provider API keys must remain server-side.
 - `shared/`: contracts shared by editor code and other clients, including serialized editor payloads.
-- `tests/`: Node architecture tests.
+- `tests/`: Node architecture tests. Convex behavior tests live in `convex/backend.test.ts`.
 - `public/`: static assets and branding.
 - `README.md`: local setup and environment configuration.
 - `.env.example`: required environment variable names without secrets.
@@ -30,6 +38,7 @@ The current application uses Convex and Auth0. Do not reintroduce Firebase or th
 ## Auth And Data Boundaries
 
 - Auth0 is the browser authentication layer. Convex receives the Auth0 ID token through the client plugin.
+- The Convex Auth0 provider list must accept the web SPA and Chrome extension native application IDs from the same tenant.
 - Use the Auth0 `identity.subject` as the account identity. Do not use email, display name, or avatar URL as a durable user key.
 - User-scoped Convex operations must use `requireUser` or `ensureUser` from `convex/helpers.ts`.
 - Admin-only Convex operations must use `requireAdmin`. Do not rely on client middleware alone for authorization.
@@ -66,6 +75,8 @@ npm run build
 ```
 
 `npm run convex:codegen` requires `CONVEX_DEPLOYMENT`. If it cannot run locally, report that limitation explicitly rather than hand-editing generated files.
+
+Run `npx convex dev` or `npx convex deploy` only from this repository and only when the user has authorized a backend deployment. A local typecheck or test run does not deploy functions.
 
 ## Change Review Checklist
 

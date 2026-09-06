@@ -2,7 +2,7 @@
 
 Date: 2026-08-30
 
-Status: Approved in chat for specification. Implementation remains pending specification review.
+Status: Implemented and verified locally. No Convex, website, extension-store, or Git remote deployment was performed.
 
 ## Context
 
@@ -13,9 +13,9 @@ Watchlistr has two independent clients:
 
 Both clients authenticate through the same Auth0 tenant and connect directly to the same Convex deployment. The website is not a runtime dependency of the extension. The shared Convex service continues to run if either client deployment is unavailable.
 
-Both repositories currently contain a deployable `convex/` implementation. Those copies have diverged. The web copy accepts both Auth0 application IDs and contains article functions used by the website. The extension copy lacks some of those functions and retains older backend details. Running Convex development or deployment from the extension can therefore publish an older definition over the shared deployment.
+Before this change, both repositories contained a deployable `convex/` implementation. Those copies had diverged. The web copy accepted both Auth0 application IDs and contained article functions used by the website. The extension copy lacked some of those functions and retained older backend details. Running Convex development or deployment from the extension could therefore publish an older definition over the shared deployment.
 
-The extension runtime does not import its local Convex implementation or generated bindings. It calls the deployed API by function name from `Watchlistr/lib/sync/convex.ts`. The extension's local `convex/` directory currently exists for backend source, backend typechecking, generated bindings, and seven `convex-test` tests.
+The extension runtime did not import its former local Convex implementation or generated bindings. It calls the deployed API by function name from `Watchlistr/lib/sync/convex.ts`. The removed extension `convex/` directory existed only for duplicate backend source, backend typechecking, generated bindings, and seven `convex-test` tests that now run in the web repository.
 
 ## Goals
 
@@ -40,16 +40,16 @@ The extension runtime does not import its local Convex implementation or generat
 
 ## Architecture decision
 
-`Watchlistr_web/convex` will own the shared Convex schema, functions, generated bindings, backend tests, typechecking, code generation, environment documentation, and deployment commands.
+`Watchlistr_web/convex` owns the shared Convex schema, functions, generated bindings, backend tests, typechecking, code generation, environment documentation, and deployment commands.
 
-The Chrome extension will remain a direct Convex client. It will retain:
+The Chrome extension remains a direct Convex client. It retains:
 
 - the `convex` runtime dependency;
 - `ConvexClient`, `ConvexHttpClient`, and `makeFunctionReference` usage;
 - its local account cache, retry queue, optimistic updates, and realtime subscriptions;
 - the configured Convex deployment URL and Auth0 native application flow.
 
-The Chrome extension will no longer contain a deployable `convex/` implementation or a Convex deployment command.
+The Chrome extension no longer contains a deployable `convex/` implementation or a Convex deployment command.
 
 The runtime remains:
 
@@ -62,7 +62,7 @@ There is no extension-to-website API dependency.
 
 ## Web repository changes
 
-The implementation will:
+Implemented changes:
 
 1. Keep the existing `Watchlistr_web/convex` implementation as the backend base. Extension files must not overwrite the newer web schema, Auth0 provider list, article fields, admin functions, or Discover article functions.
 2. Move the extension's `convex/backend.test.ts` coverage into `Watchlistr_web/convex/backend.test.ts`.
@@ -89,7 +89,7 @@ If a moved test reveals a real contract difference rather than a test fixture mi
 
 ## Extension repository changes
 
-The implementation will:
+Implemented changes:
 
 1. Remove `Watchlistr/convex`, including the duplicate schema, functions, generated bindings, TypeScript configuration, and the test after its coverage exists in the web repository.
 2. Remove the extension's `typecheck:convex` script.
@@ -150,7 +150,7 @@ Because the extension package and tracked source structure will change, follow i
 5. verify ZIP integrity;
 6. verify package, unpacked manifest, and zipped manifest version parity.
 
-No browser acceptance test is required for a user-facing behavior change because runtime extension behavior is not changing. The final report must still distinguish static checks and artifact verification from a live Chrome reload.
+No browser acceptance test is required here because this ownership change does not alter user-facing extension behavior. The final report must still distinguish static checks and artifact verification from a live Chrome reload.
 
 ## Data and rollback safety
 
